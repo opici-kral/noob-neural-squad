@@ -18,14 +18,6 @@ public class Main {
         y = y.scalarMultiply(0.01);
 
         ForwardNetwork f = new ForwardNetwork();
-     /*   RealMatrix W1 = f.generateRandomMatrix(2,3);
-        RealMatrix W2 = f.generateRandomMatrix(3,1);
-
-
-        RealMatrix z2 = X.multiply(W1);
-        RealMatrix a2 = f.sigmoid(z2);
-        RealMatrix z3 = a2.multiply(W2);
-        RealMatrix yCaret = f.sigmoid(z3);*/
      f.forward(X);
 
      RealMatrix W1 = f.W1;
@@ -40,11 +32,6 @@ public class Main {
      HashMap h = f.costFunctionPrimeFF(yCaret,y,X);
         RealMatrix dJdW1 = f.dJdW1;
         RealMatrix dJdW2 = f.dJdW2;
-
-
-
-
-
 
         System.out.println("X: " + X);
         System.out.println("y: " + y);
@@ -66,6 +53,7 @@ public class Main {
         plf.bleee("yCaret",yCaret);
         plf.bleee("J",J);
         plf.bleee("dJdW1",dJdW1);
+        plf.bleee("dJdW2",dJdW2);
 
 
     }
