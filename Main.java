@@ -27,11 +27,12 @@ public class Main {
      RealMatrix z3 = f.z3;
      RealMatrix yCaret = f.yCaret;
 
-
      RealMatrix J = f.costFunctionFF(yCaret,y);
      HashMap h = f.costFunctionPrimeFF(yCaret,y,X);
         RealMatrix dJdW1 = f.dJdW1;
         RealMatrix dJdW2 = f.dJdW2;
+        TrashyThingie t = new TrashyThingie();
+        double [] W1W2Flatt = t.vectorConcatenator(t.matrixFlattener(W1),t.matrixFlattener(W2));
 
         System.out.println("X: " + X);
         System.out.println("y: " + y);
@@ -54,6 +55,12 @@ public class Main {
         plf.bleee("J",J);
         plf.bleee("dJdW1",dJdW1);
         plf.bleee("dJdW2",dJdW2);
+        System.out.println(t.matrixFlattener(W1)[0]);
+        System.out.println(t.matrixFlattener(W2)[1]);
+        System.out.println("W1W2");
+        for (int i = 0; i <= W1W2Flatt.length - 1; i++) {
+            System.out.print(W1W2Flatt[i] + " ");
+        }
 
 
     }
