@@ -1,12 +1,15 @@
+import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
+import java.util.HashMap;
+
 public class TrashyThingie {
+    public double[] v1;
+    public double[] v2;
 
     public double[] matrixFlattener(RealMatrix m) {
         int matrixLength = m.getColumnDimension() * m.getRowDimension();
         int k = 0;
-        System.out.println(m.getColumnDimension());
-        System.out.println(m.getRowDimension());
         double[] vector = new double[matrixLength];
         if (m.getRowDimension() == 1) {
             for (int i = 0; i <= m.getColumnDimension() - 1; i++) {
@@ -30,20 +33,74 @@ public class TrashyThingie {
         return vector;
     }
 
-    public double[] vectorConcatenator(double[] v1, double[] v2) {
-        int vectorLength = v1.length + v2.length;
+    public double[] vectorConcatenator(double[] vector1, double[] vector2) {
+        int vectorLength = vector1.length + vector2.length;
         double[] v = new double[vectorLength];
         int k = 0;
-        for (int i = 0; i <= v1.length - 1; i++) {
-            v[i] = v1[i];
+        for (int i = 0; i <= vector1.length - 1; i++) {
+            v[i] = vector1[i];
             k = i + 1;
-            //System.out.println("k["+k+"]");
         }
-        for (int j = 0; j <= v2.length - 1; j++) {
-            v[k + j] = v2[j];
-           // System.out.println("k["+(k+j)+"]");
+        for (int j = 0; j <= vector2.length - 1; j++) {
+            v[k + j] = vector2[j];
         }
         return v;
     }
+
+    public void vectorCutter (double[] vector, int cutLenth) {
+        //double[]
+        v1 = new double[cutLenth];
+        //double[]
+        v2 = new double[vector.length - cutLenth];
+        HashMap h = new HashMap();
+        for (int i = 0; i <= cutLenth - 1; i++) {
+            v1[i] = vector[i];
+        }
+        for (int i = 0; i <= vector.length - cutLenth - 1; i++) {
+            v2[i] = vector[cutLenth + i];
+        }
+     //   h.put("v1",v1);
+     //   h.put("v2",v2);
+
+     //   return h;
+    }
+
+    public RealMatrix matrixReshaper(double[] vector,int k, int l) {
+        RealMatrix m = MatrixUtils.createRealMatrix(k,l);
+        for (int i = 0; i <= k - 1; i++) {
+            for (int j = 0; j <= l - 1; j++) {
+                m.setEntry(i,j,vector[j+l*(i+1)]);
+            }
+    }
+    return m;
 }
 
+    public void bleeMatrix(String name, RealMatrix matrix) {
+        System.out.println(name + ":");
+        if (matrix != null) {
+            for (int i = 0; i <= matrix.getColumn(0).length - 1; i++) {
+                System.out.println(matrix.getRowVector(i));
+            }
+            System.out.println("");
+        }
+        else {
+            System.out.println("null");
+        }
+    }
+
+    public void bleeVector(String name, double[] vector) {
+        System.out.println(name + ":");
+        if (vector != null) {
+            System.out.print("[");
+            for (int i = 0; i <= vector.length - 1; i++) {
+                System.out.print(vector[i] + " ");
+            }
+            System.out.print("]");
+            System.out.println("");
+        }
+        else {
+            System.out.println("null");
+        }
+    }
+
+}

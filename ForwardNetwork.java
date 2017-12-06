@@ -44,7 +44,8 @@ public class ForwardNetwork {
             return J;
         }
 
-        public HashMap<String,RealMatrix> costFunctionPrimeFF(RealMatrix yCaret, RealMatrix y, RealMatrix X) {
+       // public HashMap<String,RealMatrix> costFunctionPrimeFF(RealMatrix yCaret, RealMatrix y, RealMatrix X) {
+        public void costFunctionPrimeFF(RealMatrix yCaret, RealMatrix y, RealMatrix X) {
         ActivationFunction calculate = new ActivationFunction();
         RealMatrix whyDelta = y.add(yCaret.scalarMultiply(-1));
         delta3 = MatrixUtils.createRealMatrix(whyDelta.getColumn(0).length,whyDelta.getRow(0).length);
@@ -54,12 +55,9 @@ public class ForwardNetwork {
             for (int j = 0; j <= whyDelta.getRow(0).length - 1; j++) {
                 double deltaij = whyDelta.getEntry(i,j)*calculate.sigmoidPrime(z3).getEntry(i,j)*(-1);
                 delta3.setEntry(i,j,deltaij);
-                //whyDelta.scalarMultiply(-1).transpose().multiply(calculate.sigmoidPrime(z3));
             }
-            //System.out.println(delta3);
         }
         dJdW2 = a2.transpose().multiply(delta3);
-
         delta2 = delta3.multiply(W2.transpose()).multiply(calculate.sigmoidPrime(z2));
         dJdW1 = X.transpose().multiply(delta2);
 
@@ -67,7 +65,7 @@ public class ForwardNetwork {
         h.put("dJdW1",dJdW1);
         h.put("dJdW2",dJdW2);
 
-        return h;
+       // return h;
     }
 
 
