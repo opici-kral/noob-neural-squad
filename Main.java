@@ -38,7 +38,7 @@ public class Main {
 
         System.out.println("ddd: "  );
 
-       // vypisovacMatrix2D plf = new vypisovacMatrix2D();
+
         t.bleeMatrix("X",X);
         t.bleeMatrix("y",y);
         t.bleeMatrix("W1",W1);
