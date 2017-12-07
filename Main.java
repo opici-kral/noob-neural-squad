@@ -35,14 +35,8 @@ public class Main {
         TrashyThingie t = new TrashyThingie();
         double [] W1W2Flatt = t.vectorConcatenator(t.matrixFlattener(W1),t.matrixFlattener(W2));
 
-        System.out.println("X: " + X);
-        System.out.println("y: " + y);
-        System.out.println("W1: " + W1);
-        System.out.println("W2: " + W2);
-        System.out.println("z1: " + z2);
-        System.out.println("a2: " + a2);
-        System.out.println("z3: " + z3);
-        System.out.println("yCaret: " + yCaret);
+
+        System.out.println("ddd: "  );
 
        // vypisovacMatrix2D plf = new vypisovacMatrix2D();
         t.bleeMatrix("X",X);

@@ -85,8 +85,15 @@ public class ForwardNetwork {
         for (int i = 0; i <= numericalGradient.length - 1; i++) {
             numericalGradient[i] = 0;
         }
-        //double[] perturb
+        double[] perturbation = numericalGradient.clone();
         double e = 1e-4;
+
+        for (int i = 0; i <= numericalGradient.length - 1; i++) {
+            perturbation[i] = e;
+
+
+
+        }
 
         return null;
     }
