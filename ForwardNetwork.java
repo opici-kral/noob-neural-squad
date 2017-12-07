@@ -22,6 +22,7 @@ public class ForwardNetwork {
     PseudoRandomizer p = new PseudoRandomizer();
     RealMatrix W1 = p.generateRandomMatrix(inputLayerSize,hiddenLayerSize);
     RealMatrix W2 = p.generateRandomMatrix(hiddenLayerSize,outputLayerSize);
+    TrashyThingie trash = new TrashyThingie();
 
 
 
@@ -61,12 +62,36 @@ public class ForwardNetwork {
         delta2 = delta3.multiply(W2.transpose()).multiply(calculate.sigmoidPrime(z2));
         dJdW1 = X.transpose().multiply(delta2);
 
-        HashMap h = new HashMap();
-        h.put("dJdW1",dJdW1);
-        h.put("dJdW2",dJdW2);
+     //   HashMap h = new HashMap();
+     //   h.put("dJdW1",dJdW1);
+     //   h.put("dJdW2",dJdW2);
 
        // return h;
     }
+
+    public double[] calculateGradient(RealMatrix X, RealMatrix y, RealMatrix yCaret) {
+        //HashMap h = new HashMap();
+        costFunctionPrimeFF(yCaret,y,X);
+        double[] v1 = trash.matrixFlattener(dJdW1);
+        double[] v2 = trash.matrixFlattener(dJdW2);
+
+        return trash.vectorConcatenator(v1,v2);
+    }
+
+    public double[] calculateNumericalGradient(RealMatrix X, RealMatrix y) {
+        double[] v1 = trash.matrixFlattener(W1);
+        double[] v2 = trash.matrixFlattener(W2);
+        double[] numericalGradient = trash.vectorConcatenator(v1,v2);
+        for (int i = 0; i <= numericalGradient.length - 1; i++) {
+            numericalGradient[i] = 0;
+        }
+        //double[] perturb
+        double e = 1e-4;
+
+        return null;
+    }
+
+
 
 
 
