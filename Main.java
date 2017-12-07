@@ -35,16 +35,10 @@ public class Main {
         TrashyThingie t = new TrashyThingie();
         double [] W1W2Flatt = t.vectorConcatenator(t.matrixFlattener(W1),t.matrixFlattener(W2));
 
-        System.out.println("X: " + X);
-        System.out.println("y: " + y);
-        System.out.println("W1: " + W1);
-        System.out.println("W2: " + W2);
-        System.out.println("z1: " + z2);
-        System.out.println("a2: " + a2);
-        System.out.println("z3: " + z3);
-        System.out.println("yCaret: " + yCaret);
 
-       // vypisovacMatrix2D plf = new vypisovacMatrix2D();
+        System.out.println("ddd: "  );
+
+
         t.bleeMatrix("X",X);
         t.bleeMatrix("y",y);
         t.bleeMatrix("W1",W1);
@@ -66,11 +60,13 @@ public class Main {
         t.vectorCutter(W1W2Flatt,W1.getColumnDimension()*W1.getRowDimension());
         t.bleeVector("v1",t.v1);
         t.bleeVector("v2",t.v2);
+        t.bleeVector("nabla",f.calculateGradient(X,y,yCaret));
 
         System.out.println(W1.getColumnDimension()*W1.getRowDimension());
         System.out.println(t.v1[2]);
         System.out.println(W1.getClass().getName().equals("org.apache.commons.math3.linear.Array2DRowRealMatrix"));
         System.out.println(W1W2Flatt.getClass().getName().equals("[D"));
+        System.out.println(f.calculateGradient(X,y,yCaret)[0]);
         //HashMap hh = t.vectorCutter(W1W2Flatt,W1.getColumnDimension()*W1.getRowDimension());
       //  double[] W11 = new double[W1.getRowDimension()*W1.getColumnDimension()];
         //W11[0] = hh.get("v1")[0];
