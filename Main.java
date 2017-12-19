@@ -76,5 +76,11 @@ public class Main {
       //  System.out.println(t.matrixReshaper(,W1.getColumnDimension(),W1.getRowDimension()));
 
 
+        System.out.println("ted:");
+        t.bleeVector("numgr: ",f.calculateNumericalGradient(X,y));
+    //    System.out.println("zas: ");
+     //   System.out.println(W1);
+      //  System.out.println(W1.getColumnDimension());
+       // System.out.println(W1.getRowDimension());
     }
 }
