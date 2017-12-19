@@ -79,23 +79,51 @@ public class ForwardNetwork {
     }
 
     public double[] calculateNumericalGradient(RealMatrix X, RealMatrix y) {
+        System.out.println(W1);
+        System.out.println(W2);
         double[] v1 = trash.matrixFlattener(W1);
         double[] v2 = trash.matrixFlattener(W2);
         double[] numericalGradient = trash.vectorConcatenator(v1,v2);
+        for (int i = 0; i <= numericalGradient.length-1; i++) {
+            System.out.println(numericalGradient[i]);
+        }
         for (int i = 0; i <= numericalGradient.length - 1; i++) {
             numericalGradient[i] = 0;
         }
         double[] perturbation = numericalGradient.clone();
+        for (int i = 0; i <= numericalGradient.length-1; i++) {
+            System.out.println(perturbation[i]);
+        }
         double e = 1e-4;
 
         for (int i = 0; i <= numericalGradient.length - 1; i++) {
             perturbation[i] = e;
+            RealMatrix lossFunction2 = costFunctionFF(yCaret,y);
+        //  !  System.out.println(lossFunction2);
 
+            double[] uberVector = new double[perturbation.length];
+            for (int j = 0; j <= perturbation.length - 1; j++) {
+                uberVector[j] = numericalGradient[j] - perturbation[j];
+            }
+            trash.vectorCutter(uberVector,v1.length);
+            v1 = trash.v1;
+            v2 = trash.v2;
+            W1 = trash.matrixReshaper(v1,W1.getRowDimension(),W1.getColumnDimension());
+            W2 = trash.matrixReshaper(v2,W2.getRowDimension(),W2.getColumnDimension());
+          //  W1 = trash.matrixReshaper(v1,W1.getColumnDimension(),W1.getRowDimension());
+          //  W2 = trash.matrixReshaper(v2,W2.getColumnDimension(),W2.getRowDimension());
 
+            RealMatrix lossFunction1 = costFunctionFF(yCaret,y);
+           // numericalGradient[i] = (Double.parseDouble(lossFunction2.add(lossFunction1).scalarMultiply((-1)).scalarMultiply(1/(2*e)).getEntry(0,0).toString()));
+            numericalGradient[i] = (lossFunction2.add(lossFunction1).scalarMultiply((-1)).scalarMultiply(1/(2*e)).getEntry(0,0));
+         //d   System.out.println("pisiiiiii: " + lossFunction2.add(lossFunction1).scalarMultiply((-1)).scalarMultiply(1/(2*e)).getEntry(0,0));
+           // lossFunction2.add(lossFunction1).scalarMultiply((-1)).scalarMultiply(1/(2*e));
+           // System.out.println(lossFunction1);
+            perturbation[i] = 0;
 
         }
 
-        return null;
+        return numericalGradient;
     }
 
 

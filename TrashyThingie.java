@@ -69,7 +69,7 @@ public class TrashyThingie {
         RealMatrix m = MatrixUtils.createRealMatrix(k,l);
         for (int i = 0; i <= k - 1; i++) {
             for (int j = 0; j <= l - 1; j++) {
-                m.setEntry(i,j,vector[j+l*(i+1)]);
+                m.setEntry(i,j,vector[j+l*(i)]);
             }
     }
     return m;
