@@ -62,25 +62,8 @@ public class Main {
         t.bleeVector("v2",t.v2);
         t.bleeVector("nabla",f.calculateGradient(X,y,yCaret));
 
-        System.out.println(W1.getColumnDimension()*W1.getRowDimension());
-        System.out.println(t.v1[2]);
-        System.out.println(W1.getClass().getName().equals("org.apache.commons.math3.linear.Array2DRowRealMatrix"));
-        System.out.println(W1W2Flatt.getClass().getName().equals("[D"));
-        System.out.println(f.calculateGradient(X,y,yCaret)[0]);
-        //HashMap hh = t.vectorCutter(W1W2Flatt,W1.getColumnDimension()*W1.getRowDimension());
-      //  double[] W11 = new double[W1.getRowDimension()*W1.getColumnDimension()];
-        //W11[0] = hh.get("v1")[0];
-     //   System.out.println(hh.get("v1")[0]);
-
-      //  System.out.println(hh.get("v2"));
-      //  System.out.println(t.matrixReshaper(,W1.getColumnDimension(),W1.getRowDimension()));
-
-
         System.out.println("ted:");
         t.bleeVector("numgr: ",f.calculateNumericalGradient(X,y));
-    //    System.out.println("zas: ");
-     //   System.out.println(W1);
-      //  System.out.println(W1.getColumnDimension());
-       // System.out.println(W1.getRowDimension());
+        f.callbackFunction(W1W2Flatt,y);
     }
 }
