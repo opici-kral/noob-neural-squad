@@ -48,9 +48,7 @@ public class TrashyThingie {
     }
 
     public void vectorCutter (double[] vector, int cutLenth) {
-        //double[]
         v1 = new double[cutLenth];
-        //double[]
         v2 = new double[vector.length - cutLenth];
         HashMap h = new HashMap();
         for (int i = 0; i <= cutLenth - 1; i++) {
@@ -59,10 +57,6 @@ public class TrashyThingie {
         for (int i = 0; i <= vector.length - cutLenth - 1; i++) {
             v2[i] = vector[cutLenth + i];
         }
-     //   h.put("v1",v1);
-     //   h.put("v2",v2);
-
-     //   return h;
     }
 
     public RealMatrix matrixReshaper(double[] vector,int k, int l) {

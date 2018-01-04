@@ -42,7 +42,7 @@ public class ForwardNetwork {
             return J;
         }
 
-        public void costFunctionPrimeFF(RealMatrix yCaret, RealMatrix y, RealMatrix X) {
+        public void costFunctionPrimeFF(RealMatrix yCaret, RealMatrix X, RealMatrix y) {
         ActivationFunction calculate = new ActivationFunction();
         RealMatrix whyDelta = y.add(yCaret.scalarMultiply(-1));
         delta3 = MatrixUtils.createRealMatrix(whyDelta.getColumn(0).length,whyDelta.getRow(0).length);
