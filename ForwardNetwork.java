@@ -29,15 +29,12 @@ public class ForwardNetwork {
 
     public RealMatrix forward(RealMatrix X) {
         ActivationFunction calculate = new ActivationFunction();
-
         z2 = X.multiply(W1);
         a2 = calculate.sigmoid(z2);
         z3 = a2.multiply(W2);
         yCaret = calculate.sigmoid(z3);
-
         return yCaret;
     }
-
 
         public RealMatrix costFunctionFF(RealMatrix yCaret, RealMatrix y) {
             RealMatrix whyDelta = y.add(yCaret.scalarMultiply(-1));
@@ -45,12 +42,10 @@ public class ForwardNetwork {
             return J;
         }
 
-       // public HashMap<String,RealMatrix> costFunctionPrimeFF(RealMatrix yCaret, RealMatrix y, RealMatrix X) {
         public void costFunctionPrimeFF(RealMatrix yCaret, RealMatrix y, RealMatrix X) {
         ActivationFunction calculate = new ActivationFunction();
         RealMatrix whyDelta = y.add(yCaret.scalarMultiply(-1));
         delta3 = MatrixUtils.createRealMatrix(whyDelta.getColumn(0).length,whyDelta.getRow(0).length);
-
         /* lambdas? alert, might be wrong, for extended output recalculate on paper! */
         for (int i = 0; i <= whyDelta.getColumn(0).length - 1; i++) {
             for (int j = 0; j <= whyDelta.getRow(0).length - 1; j++) {
@@ -62,63 +57,56 @@ public class ForwardNetwork {
         delta2 = delta3.multiply(W2.transpose()).multiply(calculate.sigmoidPrime(z2));
         dJdW1 = X.transpose().multiply(delta2);
 
-     //   HashMap h = new HashMap();
-     //   h.put("dJdW1",dJdW1);
-     //   h.put("dJdW2",dJdW2);
-
-       // return h;
     }
 
     public double[] calculateGradient(RealMatrix X, RealMatrix y, RealMatrix yCaret) {
-        //HashMap h = new HashMap();
         costFunctionPrimeFF(yCaret,y,X);
         double[] v1 = trash.matrixFlattener(dJdW1);
         double[] v2 = trash.matrixFlattener(dJdW2);
-
         return trash.vectorConcatenator(v1,v2);
     }
 
     public double[] calculateNumericalGradient(RealMatrix X, RealMatrix y) {
-        System.out.println(W1);
-        System.out.println(W2);
         double[] v1 = trash.matrixFlattener(W1);
         double[] v2 = trash.matrixFlattener(W2);
         double[] numericalGradient = trash.vectorConcatenator(v1,v2);
-        for (int i = 0; i <= numericalGradient.length-1; i++) {
-            System.out.println(numericalGradient[i]);
-        }
+        double[] weights = numericalGradient.clone();
+
         for (int i = 0; i <= numericalGradient.length - 1; i++) {
             numericalGradient[i] = 0;
         }
         double[] perturbation = numericalGradient.clone();
-        for (int i = 0; i <= numericalGradient.length-1; i++) {
-            System.out.println(perturbation[i]);
-        }
+
         double e = 1e-4;
 
         for (int i = 0; i <= numericalGradient.length - 1; i++) {
             perturbation[i] = e;
-            RealMatrix lossFunction2 = costFunctionFF(yCaret,y);
-        //  !  System.out.println(lossFunction2);
 
             double[] uberVector = new double[perturbation.length];
             for (int j = 0; j <= perturbation.length - 1; j++) {
-                uberVector[j] = numericalGradient[j] - perturbation[j];
+                uberVector[j] = weights[j] + perturbation[j];
             }
+
             trash.vectorCutter(uberVector,v1.length);
             v1 = trash.v1;
             v2 = trash.v2;
             W1 = trash.matrixReshaper(v1,W1.getRowDimension(),W1.getColumnDimension());
             W2 = trash.matrixReshaper(v2,W2.getRowDimension(),W2.getColumnDimension());
-          //  W1 = trash.matrixReshaper(v1,W1.getColumnDimension(),W1.getRowDimension());
-          //  W2 = trash.matrixReshaper(v2,W2.getColumnDimension(),W2.getRowDimension());
+            forward(X);
+            RealMatrix lossFunction2 = costFunctionFF(yCaret,y);
 
+            for (int j = 0; j <= perturbation.length - 1; j++) {
+                uberVector[j] = weights[j] - perturbation[j];
+            }
+
+            trash.vectorCutter(uberVector,v1.length);
+            v1 = trash.v1;
+            v2 = trash.v2;
+            W1 = trash.matrixReshaper(v1,W1.getRowDimension(),W1.getColumnDimension());
+            W2 = trash.matrixReshaper(v2,W2.getRowDimension(),W2.getColumnDimension());
+            forward(X);
             RealMatrix lossFunction1 = costFunctionFF(yCaret,y);
-           // numericalGradient[i] = (Double.parseDouble(lossFunction2.add(lossFunction1).scalarMultiply((-1)).scalarMultiply(1/(2*e)).getEntry(0,0).toString()));
-            numericalGradient[i] = (lossFunction2.add(lossFunction1).scalarMultiply((-1)).scalarMultiply(1/(2*e)).getEntry(0,0));
-         //d   System.out.println("pisiiiiii: " + lossFunction2.add(lossFunction1).scalarMultiply((-1)).scalarMultiply(1/(2*e)).getEntry(0,0));
-           // lossFunction2.add(lossFunction1).scalarMultiply((-1)).scalarMultiply(1/(2*e));
-           // System.out.println(lossFunction1);
+            numericalGradient[i] = ((lossFunction2.add((lossFunction1).scalarMultiply((-1)))).scalarMultiply(1/(2*e)).getEntry(0,0));
             perturbation[i] = 0;
 
         }
@@ -127,13 +115,15 @@ public class ForwardNetwork {
     }
 
 
-
-
-
-
-
-
-
-
-
+    public void callbackFunction(double[] uberVector, RealMatrix y) {
+        double[] v1 = trash.matrixFlattener(W1);
+        double[] v2 = trash.matrixFlattener(W2);
+        trash.vectorCutter(uberVector,v1.length);
+        v1 = trash.v1;
+        v2 = trash.v2;
+        W1 = trash.matrixReshaper(v1,W1.getRowDimension(),W1.getColumnDimension());
+        W2 = trash.matrixReshaper(v2,W2.getRowDimension(),W2.getColumnDimension());
+        J.add(costFunctionFF(yCaret,y));
+        System.out.println(J);
     }
+}
