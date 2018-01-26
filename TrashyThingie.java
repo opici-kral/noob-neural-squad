@@ -1,3 +1,4 @@
+import org.apache.commons.math3.linear.DiagonalMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
@@ -95,6 +96,47 @@ public class TrashyThingie {
         else {
             System.out.println("null");
         }
+    }
+
+    public double gradToNumgradTest(double[] grad, double[] numgrad, RealMatrix X, RealMatrix y) {
+        ForwardNetwork f = new ForwardNetwork();
+        RealMatrix yCaret = f.forward(X);
+        double[] gradVector = f.calculateGradient(X,y,yCaret);
+        double[] numgradVector = f.calculateNumericalGradient(X,y);
+        double norma1 = 0;
+        double norma2 = 0;
+        for (int i = 0; i <= gradVector.length - 1; i++) {
+            double a = Math.pow((gradVector[i] - numgradVector[i]),2);
+            double b = Math.pow((gradVector[i] + numgradVector[i]),2);
+            norma1 = norma1 + a;
+            norma2 = norma2 + b;
+        }
+        double norm1 = Math.sqrt(norma1);
+        double norm2 = Math.sqrt(norma2);
+        return norm1/norm2;
+    }
+
+    public RealMatrix createIdentityMatrix(int dimension) {
+        RealMatrix E = new DiagonalMatrix(dimension);
+        for (int i = 0; i <= dimension - 1; i++) {
+            E.setEntry(i, i, 1);
+        }
+        return E;
+    }
+
+    public double[] vectorAppend(double[] vectorA, double[] vectorB) {
+        double[] vector = vectorA.clone();
+        for (int i = 0; i <= vectorA.length - 1; i++) {
+            vector[i] = vectorA[i] + vectorB[i];
+        }
+        return vector;
+    }
+
+    public double[] vectorScalarMultiply(double[] vector, double scalar) {
+        for (int i = 0; i <= vector.length - 1; i++) {
+            vector[i] = vector[i]*scalar;
+        }
+        return vector;
     }
 
 }

@@ -19,7 +19,7 @@ public class ActivationFunction {
         RealMatrix z1 = z.copy();
         for (int i = 0; i <= columnDimension; i++) {
             for (int j = 0; j <= rowDimension; j++) {
-                z1.setEntry(i, j, (Math.exp((-1)*z.getEntry(i, j))/(1 + Math.pow(Math.exp((-1)*z.getEntry(i, j)),2))));
+                z1.setEntry(i, j, (Math.exp((-1)*z.getEntry(i, j))/(Math.pow(1 + Math.exp((-1)*z.getEntry(i, j)),2))));
             }
         }
         return z1;

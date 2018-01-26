@@ -17,50 +17,30 @@ public class Main {
         X = matrix.Normalize(X);
         y = y.scalarMultiply(0.01);
 
+
         TrashyThingie t = new TrashyThingie();
         ForwardNetwork f = new ForwardNetwork();
-        f.forward(X);
+        OptimizationThingie o = new OptimizationThingie();
+
+        RealMatrix yCaret = f.forward(X);
+        double[] gradVector = f.calculateGradient(X,y,yCaret);
+        double[] numgradVector = f.calculateNumericalGradient(X,y);
+        double n = t.gradToNumgradTest(gradVector,numgradVector,X,y);
+        System.out.println(n);
 
         RealMatrix W1 = f.W1;
         RealMatrix W2 = f.W2;
-        RealMatrix z2 = f.z2;
-        RealMatrix a2 = f.a2;
-        RealMatrix z3 = f.z3;
-        RealMatrix yCaret = f.yCaret;
-        t.bleeMatrix("W1",W1);
-        t.bleeMatrix("W2",W2);
-
-
-        //t.bleeMatrix("yCaret",yCaret);
-        //t.bleeMatrix("y",y);
-
-        RealMatrix J1 = f.costFunctionFF(yCaret,y);
-        f.costFunctionPrimeFF(yCaret,X,y);
-
-        RealMatrix dJdW1 = f.dJdW1;
-        RealMatrix dJdW2 = f.dJdW2;
-
-        t.bleeMatrix("dJdW1",dJdW1);
-        t.bleeMatrix("dJdW2",dJdW2);yCaret = f.yCaret;
-
-        t.bleeMatrix("J1",J1);
-
-        double scalar = 3;
-        f.W1 = f.W1.add(f.dJdW1.scalarMultiply(-3));
-        f.W2 = f.W2.add(f.dJdW2.scalarMultiply(-3));
-
-
-        f.forward(X);
-        yCaret = f.yCaret;
-        RealMatrix J2 = f.costFunctionFF(yCaret,y);
-
-        t.bleeMatrix("J2",J2);
+        double [] W1W2Flatt = t.vectorConcatenator(t.matrixFlattener(W1),t.matrixFlattener(W2));
+        RealMatrix Xhat = o.naiveBFGS(W1W2Flatt, null, gradVector, X, y);
+        t.bleeMatrix("Xhat", Xhat);
 
 
 
 
 
-    /* RealMatrix J = f.costFunctionFF(yCaret,y);
+
+
+        /* RealMatrix J = f.costFunctionFF(yCaret,y);
      //HashMap h = f.costFunctionPrimeFF(yCaret,y,X);
      f.costFunctionPrimeFF(yCaret,y,X);
         RealMatrix dJdW1 = f.dJdW1;
