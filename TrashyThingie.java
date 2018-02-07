@@ -2,7 +2,9 @@ import org.apache.commons.math3.linear.DiagonalMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class TrashyThingie {
     public double[] v1;
@@ -137,6 +139,26 @@ public class TrashyThingie {
             vector[i] = vector[i]*scalar;
         }
         return vector;
+    }
+
+    public List<Integer> binarizer(Integer myInteger) {
+        List<Integer> binaryList = new ArrayList<>();
+        Double myDouble = myInteger.doubleValue();
+
+        while (myDouble > 1) {
+            if (myInteger % 2 == 1) {
+                binaryList.add(1);
+                myDouble = Math.ceil(myDouble / 2);
+            } else {
+                binaryList.add(0);
+                myDouble = Math.ceil(myDouble / 2);
+            }
+            myInteger = myDouble.intValue();
+        }
+
+
+
+        return binaryList;
     }
 
 }
