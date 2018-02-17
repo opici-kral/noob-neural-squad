@@ -1,4 +1,3 @@
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.math3.linear.DiagonalMatrix;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;

@@ -12,8 +12,10 @@ public class TrashyThingie {
 
     public double[] matrixFlattener(RealMatrix m) {
         int matrixLength = m.getColumnDimension() * m.getRowDimension();
+      //  System.out.println(m.getColumnDimension());
         int k = 0;
         double[] vector = new double[matrixLength];
+        List<Double> ll = new ArrayList<>();
         if (m.getRowDimension() == 1) {
             for (int i = 0; i <= m.getColumnDimension() - 1; i++) {
                 vector[i] = m.getEntry(0,i);
@@ -27,9 +29,14 @@ public class TrashyThingie {
 
             for (int i = 0; i <= m.getRowDimension() - 1; i++) {
                 for (int j = 0; j <= m.getColumnDimension() - 1; j++) {
-                    vector[j + k] = m.getEntry(i, j);
+                   // vector[j + k] = m.getEntry(i, j);
+                    ll.add(m.getEntry(i,j));
                 }
-                k = m.getRowDimension() * (i + 1) + 1;
+                //k = m.getRowDimension() * (i + 1) + 1;
+            }
+
+            for (int i = 0; i <= ll.size() - 1; i++) {
+                vector[i] = ll.get(i);
             }
 
         }
@@ -143,22 +150,66 @@ public class TrashyThingie {
 
     public List<Integer> binarizer(Integer myInteger) {
         List<Integer> binaryList = new ArrayList<>();
+        List<Integer> finalList = new ArrayList<>();
         Double myDouble = myInteger.doubleValue();
 
-        while (myDouble > 1) {
-            if (myInteger % 2 == 1) {
-                binaryList.add(1);
-                myDouble = Math.ceil(myDouble / 2);
-            } else {
-                binaryList.add(0);
-                myDouble = Math.ceil(myDouble / 2);
+
+        if (myInteger == 0) {
+            binaryList.add(0);
+        }
+        if (myInteger < 0) {
+            System.out.println("======== wrong input ========");
+        }
+        if (myInteger > 0) {
+            while (myDouble > 1) {
+                if (myInteger % 2 == 1) {
+                    binaryList.add(1);
+                    myDouble = Math.floor(myDouble / 2);
+                } else {
+                    binaryList.add(0);
+                    myDouble = Math.floor(myDouble / 2);
+                }
+                myInteger = myDouble.intValue();
             }
-            myInteger = myDouble.intValue();
+            binaryList.add(1);
         }
 
+        int listLenght = binaryList.size() - 1;
+        for (int i = 0; i <= listLenght; i++) {
+            finalList.add(binaryList.get(listLenght - i));
+        }
 
-
-        return binaryList;
+        return finalList;
     }
+
+    public List<Integer> zeroAjzer (List<Integer> list, int length) {
+        List<Integer> reverseZeroList = new ArrayList<>();
+        List<Integer> zeroList = new ArrayList<>();
+
+        for (int i = 0; i <= length - 1; i++) {
+            if (i <= list.size() - 1) {
+                reverseZeroList.add(i,list.get(list.size()-1-i));
+            }
+            else {
+                reverseZeroList.add(i,0);
+            }
+        }
+
+        for (int i = 0; i <= length - 1; i++) {
+            zeroList.add(i,reverseZeroList.get(length-1-i));
+        }
+        return zeroList;
+    }
+
+    public RealMatrix zeroTurner(RealMatrix matrix) {
+       // RealMatrix zeroMatrix = matrix.copy();
+        for (int i = 0; i <= matrix.getRowDimension() - 1; i++) {
+            for (int j = 0; j <= matrix.getColumnDimension() - 1; j++) {
+                matrix.setEntry(i,j,0);
+            }
+        }
+        return matrix;
+    }
+
 
 }

@@ -1,4 +1,3 @@
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
