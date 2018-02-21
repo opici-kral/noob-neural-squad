@@ -82,6 +82,11 @@ public class Main {
         RealMatrix X_ = MatrixUtils.createRealMatrix(vecX);
         RealMatrix y_ = MatrixUtils.createRealMatrix(vecY).transpose();
 
+        ActivationFunction activate = new ActivationFunction();
+        RealMatrix layer_1 = activate.sigmoid(X_.multiply(synapse_0)).add(layer1values.multiply(synapse_h));
+        RealMatrix layer_2 = activate.sigmoid(layer_1.multiply(synapse_1));
+        RealMatrix layer_2_error = y_.add(layer_2.scalarMultiply(-1));
+
 
         System.out.println(" " + aL);
         System.out.println("+" + bL);
@@ -93,6 +98,10 @@ public class Main {
         System.out.println(layer1values);
         t.bleeMatrix("X",X_);
         t.bleeMatrix("y",y_);
+        t.bleeMatrix("layer_1",layer_1);
+        t.bleeMatrix("layer_2",layer_2);
+        t.bleeMatrix("layer_2_error",layer_2_error);
+
 
 
 
