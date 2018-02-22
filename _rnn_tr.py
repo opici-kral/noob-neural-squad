@@ -80,7 +80,7 @@ print("y",y)
 
 
 # training logic
-for j in range(10000):
+for j in range(1):
 
     # generate a simple addition problem (a + b = c)
     a_int = np.random.randint(largest_number / 2)  # int version
@@ -103,7 +103,7 @@ for j in range(10000):
     layer_1_values.append(np.zeros(hidden_dim))
 
     # moving along the positions in the binary encoding
-    for position in range(0):#range(binary_dim):
+    for position in range(1):#range(binary_dim):
 
 
         # generate input and output
@@ -115,9 +115,11 @@ for j in range(10000):
 
         # output layer (new binary representation)
         layer_2 = sigmoid(np.dot(layer_1, synapse_1))
-
+        print("layer_2",layer_2)
         # did we miss?... if so, by how much?
         layer_2_error = y - layer_2
+        print("layer_2_err", layer_2_error)
+
         layer_2_deltas.append((layer_2_error) * sigmoid_output_to_derivative(layer_2))
         overallError += np.abs(layer_2_error[0])
 

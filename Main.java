@@ -88,6 +88,7 @@ public class Main {
         RealMatrix layer_2_error = y_.add(layer_2.scalarMultiply(-1));
 
 
+
         System.out.println(" " + aL);
         System.out.println("+" + bL);
         System.out.println("--------------------------");
