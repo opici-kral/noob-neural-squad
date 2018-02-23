@@ -30,6 +30,7 @@ public class Main {
         RealMatrix Xhat = o.naiveBFGS(W1W2Flatt, null, gradVector, X, y);
         t.bleeMatrix("Xhat", Xhat);
 
+        // recurrent neural net
         System.out.println(t.zeroAjzer(t.binarizer(11),8));
 
         PseudoRandomizer pseudoRandom = new PseudoRandomizer();
@@ -63,17 +64,18 @@ public class Main {
         t.bleeMatrix("synapse_h_zero",synapse_h_zero);
 
         //starts for j in 10000
-        int a = (int) (Math.random()*(256/2));
-        int b = (int) (Math.random()*(256/2));
+        int a = (int) (Math.random()*(Math.pow(16,2)/2));
+        int b = (int) (Math.random()*(Math.pow(16,2)/2));
         int c = a + b;
         List<Integer> aL = t.zeroAjzer(t.binarizer(a),binaryDimension);
         List<Integer> bL = t.zeroAjzer(t.binarizer(b),binaryDimension);
         List<Integer> cL = t.zeroAjzer(t.binarizer(c),binaryDimension);
-        List<Integer> dL = new ArrayList<Integer>(Collections.nCopies(8, 0));
+        List<Integer> dL = new ArrayList<Integer>(Collections.nCopies(binaryDimension, 0));
         double error = 0;
         //RealMatrix layer2deltas List or matrix???
         double[][] layer1valuesVector ={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
         RealMatrix layer1values = MatrixUtils.createRealMatrix(layer1valuesVector);
+        List<Double> layer_2_deltas = new ArrayList<>();
 
         // for position in bindim
         int position = 0;
@@ -86,6 +88,10 @@ public class Main {
         RealMatrix layer_1 = activate.sigmoid(X_.multiply(synapse_0)).add(layer1values.multiply(synapse_h));
         RealMatrix layer_2 = activate.sigmoid(layer_1.multiply(synapse_1));
         RealMatrix layer_2_error = y_.add(layer_2.scalarMultiply(-1));
+        layer_2_deltas.add(layer_2_error.getEntry(0,0)*activate.sigmoidPrime(layer_2).getEntry(0,0));
+        Double overallErr += Math.abs(layer_2_error.getEntry(0,0));
+
+
 
 
 
@@ -102,6 +108,8 @@ public class Main {
         t.bleeMatrix("layer_1",layer_1);
         t.bleeMatrix("layer_2",layer_2);
         t.bleeMatrix("layer_2_error",layer_2_error);
+        System.out.println("layer_2_deltas" + layer_2_deltas);
+        //System.out.println("sig^2L2" + activate.sigmoidPrime(layer_2));
 
 
 
