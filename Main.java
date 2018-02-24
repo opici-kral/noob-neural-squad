@@ -71,7 +71,8 @@ public class Main {
         List<Integer> bL = t.zeroAjzer(t.binarizer(b),binaryDimension);
         List<Integer> cL = t.zeroAjzer(t.binarizer(c),binaryDimension);
         List<Integer> dL = new ArrayList<Integer>(Collections.nCopies(binaryDimension, 0));
-        double error = 0;
+        double overallError = 0;
+
         //RealMatrix layer2deltas List or matrix???
         double[][] layer1valuesVector ={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
         RealMatrix layer1values = MatrixUtils.createRealMatrix(layer1valuesVector);
@@ -89,8 +90,10 @@ public class Main {
         RealMatrix layer_2 = activate.sigmoid(layer_1.multiply(synapse_1));
         RealMatrix layer_2_error = y_.add(layer_2.scalarMultiply(-1));
         layer_2_deltas.add(layer_2_error.getEntry(0,0)*activate.sigmoidPrime(layer_2).getEntry(0,0));
-        Double overallErr += Math.abs(layer_2_error.getEntry(0,0));
+        overallError += Math.abs(layer_2_error.getEntry(0,0));
 
+        dL.set(binaryDimension-position-1, ((int) Math.round(layer_2.getEntry(0, 0))));
+        layer1values.add(layer_1.copy());
 
 
 
@@ -101,7 +104,7 @@ public class Main {
         System.out.println(" " + cL);
         System.out.println(a + " + " + b + " = " + c);
         System.out.println(" ");
-        System.out.println(dL);
+        System.out.println("dL: "+dL);
         System.out.println(layer1values);
         t.bleeMatrix("X",X_);
         t.bleeMatrix("y",y_);
@@ -109,6 +112,7 @@ public class Main {
         t.bleeMatrix("layer_2",layer_2);
         t.bleeMatrix("layer_2_error",layer_2_error);
         System.out.println("layer_2_deltas" + layer_2_deltas);
+        System.out.println("overErr: "+overallError);
         //System.out.println("sig^2L2" + activate.sigmoidPrime(layer_2));
 
 
