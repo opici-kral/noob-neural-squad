@@ -115,7 +115,7 @@ for j in range(1):
 
         # output layer (new binary representation)
         layer_2 = sigmoid(np.dot(layer_1, synapse_1))
-        print("layer_2",layer_2)
+        print("layer_1",layer_1)
         # did we miss?... if so, by how much?
         layer_2_error = y - layer_2
         print("layer_2_err", layer_2_error)
@@ -128,13 +128,27 @@ for j in range(1):
 
         # store hidden layer so we can use it in the next timestep
         layer_1_values.append(copy.deepcopy(layer_1))
+        print("-------------------")
+        print("layer_1_values:--->",layer_1_values)
+        print("-------------------")
+
 
     future_layer_1_delta = np.zeros(hidden_dim)
 
-    for position in range(0):#range(binary_dim):
+    print("--")
+    print(future_layer_1_delta)
+    print("--")
+
+
+    for position in range(1):#range(binary_dim):
         X = np.array([[a[position], b[position]]])
+
+        print("x--->",X)
         layer_1 = layer_1_values[-position - 1]
         prev_layer_1 = layer_1_values[-position - 2]
+
+        print("l1->>",layer_1)
+        print("pl1->>",prev_layer_1)
 
         # error at output layer
         layer_2_delta = layer_2_deltas[-position - 1]

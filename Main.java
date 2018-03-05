@@ -75,7 +75,10 @@ public class Main {
 
         //RealMatrix layer2deltas List or matrix???
         double[][] layer1valuesVector ={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
-        RealMatrix layer1values = MatrixUtils.createRealMatrix(layer1valuesVector);
+        RealMatrix layer1valuesMatrix = MatrixUtils.createRealMatrix(layer1valuesVector);
+        List<RealMatrix> layer1values = new ArrayList<>();
+        layer1values.add(layer1valuesMatrix);
+
         List<Double> layer_2_deltas = new ArrayList<>();
 
         // for position in bindim
@@ -84,16 +87,29 @@ public class Main {
         double[][] vecY ={{cL.get(binaryDimension-position-1)}};
         RealMatrix X_ = MatrixUtils.createRealMatrix(vecX);
         RealMatrix y_ = MatrixUtils.createRealMatrix(vecY).transpose();
-
+      //  t.bleeMatrix("X",X_);
         ActivationFunction activate = new ActivationFunction();
-        RealMatrix layer_1 = activate.sigmoid(X_.multiply(synapse_0)).add(layer1values.multiply(synapse_h));
+        RealMatrix layer_1 = activate.sigmoid(X_.multiply(synapse_0)).add(layer1values.get(0).multiply(synapse_h));
         RealMatrix layer_2 = activate.sigmoid(layer_1.multiply(synapse_1));
         RealMatrix layer_2_error = y_.add(layer_2.scalarMultiply(-1));
         layer_2_deltas.add(layer_2_error.getEntry(0,0)*activate.sigmoidPrime(layer_2).getEntry(0,0));
         overallError += Math.abs(layer_2_error.getEntry(0,0));
 
         dL.set(binaryDimension-position-1, ((int) Math.round(layer_2.getEntry(0, 0))));
-        layer1values.add(layer_1.copy());
+        layer1values.add(layer_1);
+        //future layer 1 delta = {00000000000}
+
+        //for position in bindim podruhe
+        double[][] vecX_I = {{aL.get(position),bL.get(position)}};
+        X_ = MatrixUtils.createRealMatrix(vecX_I);
+        layer_1 = layer1values.get(layer1values.size()-position-1);
+        RealMatrix prev_layer_1 = layer_1.copy();
+        prev_layer_1 = layer1values.get(layer1values.size()-position-2);
+
+        t.bleeMatrix("l1",layer_1);
+        t.bleeMatrix("prev_layer_1",prev_layer_1);
+       // t.bleeMatrix("X",X_);
+
 
 
 
@@ -105,14 +121,14 @@ public class Main {
         System.out.println(a + " + " + b + " = " + c);
         System.out.println(" ");
         System.out.println("dL: "+dL);
-        System.out.println(layer1values);
-        t.bleeMatrix("X",X_);
+     //   t.bleeMatrix("X",X_);
         t.bleeMatrix("y",y_);
         t.bleeMatrix("layer_1",layer_1);
         t.bleeMatrix("layer_2",layer_2);
         t.bleeMatrix("layer_2_error",layer_2_error);
         System.out.println("layer_2_deltas" + layer_2_deltas);
         System.out.println("overErr: "+overallError);
+        System.out.println("layer1values" + layer1values);
         //System.out.println("sig^2L2" + activate.sigmoidPrime(layer_2));
 
 
