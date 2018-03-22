@@ -49,18 +49,6 @@ synapse_h_update = np.zeros_like(synapse_h)
 # training logic
 for j in range(10000):
 
-    # generate a simple addition problem (a + b = c)
-    a_int = np.random.randint(largest_number / 2)  # int version
-    a = int2binary[a_int]  # binary encoding
-
-    b_int = np.random.randint(largest_number / 2)  # int version
-    b = int2binary[b_int]  # binary encoding
-
-    # true answer
-    c_int = a_int + b_int
-    c = int2binary[c_int]
-
-    # where we'll store our best guess (binary encoded)
     d = np.zeros_like(pre_y)
 
     overallError = 0
@@ -71,9 +59,11 @@ for j in range(10000):
 
     # moving along the positions in the binary encoding
     for position in range(binary_dim):
+
         # generate input and output
-        X = np.array([[pre_X[binary_dim - position]]])
-        y = np.array([[pre_y[binary_dim - position-1]]]).T
+        X = np.array([pre_X[binary_dim - position]])
+        y = np.array([pre_y[binary_dim - position-1]]).T
+        #print(position, "---->", np.dot(X, synapse_0))
 
         # hidden layer (input ~+ prev_hidden)
         layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
@@ -93,10 +83,18 @@ for j in range(10000):
         # store hidden layer so we can use it in the next timestep
         layer_1_values.append(copy.deepcopy(layer_1))
 
+        if j > 9900:
+            print("f(",X,")=",y)
+            print("Error:" + str(overallError))
+            print("__Pre:" + str(X))
+            print("Guess:" + str(d[binary_dim - position - 1]))
+            print("_True:" + str(y))
+            print("--------------------")
+
     future_layer_1_delta = np.zeros(hidden_dim)
 
     for position in range(binary_dim):
-        X = np.array([[pre_X[position]]])
+        X = np.array([pre_X[position]])
         layer_1 = layer_1_values[-position - 1]
         prev_layer_1 = layer_1_values[-position - 2]
 
@@ -122,15 +120,3 @@ for j in range(10000):
     synapse_h_update *= 0
 
     # print out progress
-    if (j % 1000 == 0):
-        print("Error:" + str(overallError))
-        print("_Pre:" + str(X))
-        print("gues:")
-        print(d)
-        print("True:" + str(y))
-        out = 0
-        for index, x in enumerate(reversed(d)):
-            out += x * pow(2, index)
-            #   print(str(a_int) + " + " + str(b_int) + " = " + str(out))
-        print("------------")
-
