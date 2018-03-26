@@ -1,43 +1,60 @@
-import copy, numpy as np
+import copy
+import numpy as np
+import matplotlib.pyplot as plt
 import time
 
 np.random.seed(0)
 
+int2binary = {}
+binary_dim = 8
 
-# compute sigmoid nonlinearity
+
 def sigmoid(x):
     output = 1 / (1 + np.exp(-x))
     return output
 
 
-# convert output of sigmoid function to its derivative
 def sigmoid_output_to_derivative(output):
     return output * (1 - output)
 
 
-# training dataset generation
-int2binary = {}
-binary_dim = 8
+def random_sample_generator():
+    sample_set = list()
+    one_sub_sample = list()
+    for j in range(0, 1000):
+        for i in range(0, binary_dim + 1):
+            if np.random.random(1) < .333:
+                one_sub_sample.append(.1)
+            elif .333 <= np.random.random(1) <= .666:
+                one_sub_sample.append(.2)
+            else:
+                one_sub_sample.append(.3)
+        sample_set.append(one_sub_sample)
+        one_sub_sample = list()
+    return sample_set
+
+
+sample = random_sample_generator()
+for i in range(len(sample)):
+    print(str(i), " ", sample[i])
+
+
+plt.plot([1,2,3,4])
+plt.ylabel('lofas lentght')
+plt.show()
+
+time.sleep(1000)
 
 largest_number = pow(2, binary_dim)
-binary = np.unpackbits(
-    np.array([range(largest_number)], dtype=np.uint8).T, axis=1)
-for i in range(largest_number):
-    int2binary[i] = binary[i]
 
 pre_X = np.array([[1, 0, 1], [1, 0, 1], [1, 1, 0], [1, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1], [0, 1, 1], [1, 0, 1]])
 pre_y = np.array([[.1], [.1], [.2], [.1], [.2], [.1], [.3], [.3], [.1]])
-#print(PRE_X[0])
 
-#time.sleep(10)
-
-# input variables
 alpha = 0.1
-input_dim = 3
-hidden_dim = 16
+input_dim = 1
+hidden_dim = 7
 output_dim = 1
 
-# initialize neural network weights
 synapse_0 = 2 * np.random.random((input_dim, hidden_dim)) - 1
 synapse_1 = 2 * np.random.random((hidden_dim, output_dim)) - 1
 synapse_h = 2 * np.random.random((hidden_dim, hidden_dim)) - 1
@@ -46,45 +63,35 @@ synapse_0_update = np.zeros_like(synapse_0)
 synapse_1_update = np.zeros_like(synapse_1)
 synapse_h_update = np.zeros_like(synapse_h)
 
-# training logic
+print("==============tunning==============")
 for j in range(10000):
 
     d = np.zeros_like(pre_y)
-
     overallError = 0
-
     layer_2_deltas = list()
     layer_1_values = list()
     layer_1_values.append(np.zeros(hidden_dim))
 
-    # moving along the positions in the binary encoding
     for position in range(binary_dim):
 
-        # generate input and output
-        X = np.array([pre_X[binary_dim - position]])
+        X = np.array([pre_y[binary_dim - position]])
         y = np.array([pre_y[binary_dim - position-1]]).T
-        #print(position, "---->", np.dot(X, synapse_0))
 
-        # hidden layer (input ~+ prev_hidden)
         layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
 
-        # output layer (new binary representation)
         layer_2 = sigmoid(np.dot(layer_1, synapse_1))
 
-        # did we miss?... if so, by how much?
         layer_2_error = y - layer_2
-        layer_2_deltas.append((layer_2_error) * sigmoid_output_to_derivative(layer_2))
+        layer_2_deltas.append(layer_2_error * sigmoid_output_to_derivative(layer_2))
         overallError += np.abs(layer_2_error[0])
 
-        # decode estimate so we can print it out
-        #d[binary_dim - position - 1] = np.round(layer_2[0][0])
-        d[binary_dim - position - 1] = layer_2[0][0]
+        d[binary_dim - position - 1] = round(layer_2[0][0], 1)
+        #d[binary_dim - position - 1] = layer_2[0][0]
 
-        # store hidden layer so we can use it in the next timestep
         layer_1_values.append(copy.deepcopy(layer_1))
 
-        if j > 9900:
-            print("f(",X,")=",y)
+        if j > 9990:
+            print("f(", X, ",[", position, "])=",y)
             print("Error:" + str(overallError))
             print("__Pre:" + str(X))
             print("Guess:" + str(d[binary_dim - position - 1]))
@@ -94,17 +101,15 @@ for j in range(10000):
     future_layer_1_delta = np.zeros(hidden_dim)
 
     for position in range(binary_dim):
-        X = np.array([pre_X[position]])
+        X = np.array([pre_y[position]])
         layer_1 = layer_1_values[-position - 1]
         prev_layer_1 = layer_1_values[-position - 2]
 
-        # error at output layer
         layer_2_delta = layer_2_deltas[-position - 1]
-        # error at hidden layer
+
         layer_1_delta = (future_layer_1_delta.dot(synapse_h.T) + layer_2_delta.dot(
             synapse_1.T)) * sigmoid_output_to_derivative(layer_1)
 
-        # let's update all our weights so we can try again
         synapse_1_update = synapse_1_update + np.atleast_2d(layer_1).T.dot(layer_2_delta)
         synapse_h_update = synapse_h_update + np.atleast_2d(prev_layer_1).T.dot(layer_1_delta)
         synapse_0_update = synapse_0_update + X.T.dot(layer_1_delta)
@@ -119,4 +124,42 @@ for j in range(10000):
     synapse_1_update *= 0
     synapse_h_update *= 0
 
-    # print out progress
+print("==============calibrated==============")
+print("synapse_0:",synapse_0)
+print("")
+print("synapse_1:",synapse_1)
+print("")
+print("synapse_h:",synapse_h)
+
+d = np.zeros_like(pre_y)
+overallError = 0
+layer_2_deltas = list()
+layer_1_values = list()
+layer_1_values.append(np.zeros(hidden_dim))
+for position in range(binary_dim):
+
+        X = np.array([pre_y[binary_dim - position]])
+        y = np.array([pre_y[binary_dim - position-1]]).T
+
+        layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
+
+        layer_2 = sigmoid(np.dot(layer_1, synapse_1))
+
+        layer_2_error = y - layer_2
+        layer_2_deltas.append(layer_2_error * sigmoid_output_to_derivative(layer_2))
+        overallError += np.abs(layer_2_error[0])
+
+        d[binary_dim - position - 1] = round(layer_2[0][0], 1)
+        #d[binary_dim - position - 1] = layer_2[0][0]
+
+        layer_1_values.append(copy.deepcopy(layer_1))
+
+        if j > 9990:
+            print("f(", X, ",[", position, "])=",y)
+            print("Error:" + str(overallError))
+            print("__Pre:" + str(X))
+            print("Guess:" + str(d[binary_dim - position - 1]))
+            print("_True:" + str(y))
+            print("--------------------")
+
+        future_layer_1_delta = np.zeros(hidden_dim)
