@@ -1,9 +1,13 @@
 import copy
 import numpy as np
+import matplotlib.pyplot as plt
 import time
 
-np.random.seed(0)
+np.random.seed(333)
 
+int2binary = {}
+binary_dim = 8
+print(np.random.rand(50))
 
 def sigmoid(x):
     output = 1 / (1 + np.exp(-x))
@@ -15,24 +19,41 @@ def sigmoid_output_to_derivative(output):
 
 
 def random_sample_generator():
-    sample = list()
-
-    for i in range(0, 1000):
-        if np.random.random(1) < .333:
-            sample.append(.1)
-        elif .333 <= np.random.random(1) <= .666:
-            sample.append(.2)
-        else:
-            sample.append(.3)
-    return sample
+    sample_set = list()
+    one_sub_sample = list()
+    for j in range(0, 1000):
+        for i in range(0, binary_dim + 1):
+            if np.random.random(1) < .333:
+                one_sub_sample.append(.1)
+            elif .333 <= np.random.random(1) <= .666:
+                one_sub_sample.append(.2)
+            else:
+                one_sub_sample.append(.3)
+        sample_set.append(one_sub_sample)
+        one_sub_sample = list()
+    return sample_set
 
 
 sample = random_sample_generator()
 for i in range(len(sample)):
     print(str(i), " ", sample[i])
 
-int2binary = {}
-binary_dim = 8
+
+def plot_my_shit():
+    x = 0
+    y = 0
+    if sample[i] == .1:
+        y = y + 1
+
+
+
+
+#plt.scatter()
+#plt.ylabel('Y')
+#plt.xlabel('x')
+#plt.show()
+
+time.sleep(1000)
 
 largest_number = pow(2, binary_dim)
 
