@@ -92,7 +92,7 @@ for i in range(len(path_set)):
 #plt.xlabel('x')
 plt.show()
 
-time.sleep(1000)
+time.sleep(1)
 
 largest_number = pow(2, binary_dim)
 
@@ -181,6 +181,7 @@ print("")
 print("synapse_h:", synapse_h)
 
 d = np.zeros_like(pre_y)
+#pre_y = sample[0]
 overallError = 0
 layer_2_deltas = list()
 layer_1_values = list()
@@ -204,7 +205,7 @@ for position in range(binary_dim):
         layer_1_values.append(copy.deepcopy(layer_1))
 
         if j > 9990:
-            print("f(", X, ",[", position, "])=",y)
+            print("f(", X, ",[", position, "])=", y)
             print("Error:" + str(overallError))
             print("__Pre:" + str(X))
             print("Guess:" + str(d[binary_dim - position - 1]))
