@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-np.random.seed(333)
+np.random.seed(46689997)
 
 int2binary = {}
 binary_dim = 8
-print(np.random.rand(50))
+
 
 def sigmoid(x):
     output = 1 / (1 + np.exp(-x))
@@ -18,10 +18,11 @@ def sigmoid_output_to_derivative(output):
     return output * (1 - output)
 
 
+# generate random vector-path set
 def random_sample_generator():
     sample_set = list()
     one_sub_sample = list()
-    for j in range(0, 1000):
+    for j in range(0, 1001):
         for i in range(0, binary_dim + 1):
             if np.random.random(1) < .333:
                 one_sub_sample.append(.1)
@@ -39,25 +40,63 @@ for i in range(len(sample)):
     print(str(i), " ", sample[i])
 
 
-def plot_my_shit():
-    x = 0
-    y = 0
-    if sample[i] == .1:
-        y = y + 1
+def transcript_to_coordinates():
+    #text_file = open("my_maze.txt", "w+")
+    sample_set = list()
+    for j in range(len(sample)):
+        x = 0
+        y = 0
+        path = list()
+        for i in range(len(sample[j])):
+            if sample[j][i] == .1:
+                y += 1
+            elif sample[j][i] == .2:
+                x += 1
+            else:
+                x += -1
+            path.append([x, y])
+        sample_set.append(path)
+        #print(path)
+        #text_file.write("%s\n" % path)
+    #text_file.close()
+    return sample_set
+
+my_sample = transcript_to_coordinates()
+
+for i in range(len(my_sample)):
+    print(my_sample[i])
 
 
+def cre_sample_for_graph(my_sample):
+    sampler = list()
+    for j in range(len(my_sample)):
+        x1 = list()
+        y1 = list()
+        for i in range(len(my_sample[j])):
+            x1.append(my_sample[j][i][0])
+            y1.append(my_sample[j][i][1])
+        sampler.append([x1, y1])
+    return sampler
 
 
-#plt.scatter()
+path_set = cre_sample_for_graph(my_sample)
+
+print("")
+#print(path_set)
+
+for i in range(len(path_set)):
+    plt.scatter(path_set[i][0], path_set[i][1])
+    plt.plot(path_set[i][0], path_set[i][1])
+    
 #plt.ylabel('Y')
 #plt.xlabel('x')
-#plt.show()
+plt.show()
 
 time.sleep(1000)
 
 largest_number = pow(2, binary_dim)
 
-pre_X = np.array([[1, 0, 1], [1, 0, 1], [1, 1, 0], [1, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1], [0, 1, 1], [1, 0, 1]])
+#pre_X = np.array([[1, 0, 1], [1, 0, 1], [1, 1, 0], [1, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1], [0, 1, 1], [1, 0, 1]])
 pre_y = np.array([[.1], [.1], [.2], [.1], [.2], [.1], [.3], [.3], [.1]])
 
 alpha = 0.1
@@ -135,11 +174,11 @@ for j in range(10000):
     synapse_h_update *= 0
 
 print("==============calibrated==============")
-print("synapse_0:",synapse_0)
+print("synapse_0:", synapse_0)
 print("")
-print("synapse_1:",synapse_1)
+print("synapse_1:", synapse_1)
 print("")
-print("synapse_h:",synapse_h)
+print("synapse_h:", synapse_h)
 
 d = np.zeros_like(pre_y)
 overallError = 0
