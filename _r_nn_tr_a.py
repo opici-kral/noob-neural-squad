@@ -25,11 +25,11 @@ def random_sample_generator():
     for j in range(0, 1001):
         for i in range(0, binary_dim + 1):
             if np.random.random(1) < .333:
-                one_sub_sample.append(.1)
+                one_sub_sample.append([.1])
             elif .333 <= np.random.random(1) <= .666:
-                one_sub_sample.append(.2)
+                one_sub_sample.append([.2])
             else:
-                one_sub_sample.append(.3)
+                one_sub_sample.append([.3])
         sample_set.append(one_sub_sample)
         one_sub_sample = list()
     return sample_set
@@ -48,9 +48,9 @@ def transcript_to_coordinates():
         y = 0
         path = list()
         for i in range(len(sample[j])):
-            if sample[j][i] == .1:
+            if sample[j][i][0] == .1:
                 y += 1
-            elif sample[j][i] == .2:
+            elif sample[j][i][0] == .2:
                 x += 1
             else:
                 x += -1
@@ -179,6 +179,8 @@ print("")
 print("synapse_1:", synapse_1)
 print("")
 print("synapse_h:", synapse_h)
+print("")
+print("sample[0]", sample[0])
 
 d = np.zeros_like(pre_y)
 #pre_y = sample[0]
@@ -186,10 +188,22 @@ overallError = 0
 layer_2_deltas = list()
 layer_1_values = list()
 layer_1_values.append(np.zeros(hidden_dim))
+print("------>", sample[0])
+print("------>", sample[0][0])
+print("------>", sample[0][1])
+print("------>", sample[0][2])
+print("------>", sample[0][3])
+print("------>", sample[0][4])
+print("------>", sample[0][5])
+print("------>", sample[0][6])
+print("------>", sample[0][7])
+print("------>", sample[0][8])
+
 for position in range(binary_dim):
 
-        X = np.array([pre_y[binary_dim - position]])
-        y = np.array([pre_y[binary_dim - position-1]]).T
+        X = np.array([sample[0][binary_dim - position + 1]])
+        #print(position, ".")
+        y = np.array([sample[0][binary_dim - position - 1 + 1]]).T
 
         layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
 
