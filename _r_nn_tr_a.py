@@ -97,7 +97,7 @@ time.sleep(1)
 largest_number = pow(2, binary_dim)
 
 #pre_X = np.array([[1, 0, 1], [1, 0, 1], [1, 1, 0], [1, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1], [0, 1, 1], [1, 0, 1]])
-pre_y = np.array([[.1], [.1], [.2], [.1], [.2], [.1], [.3], [.3], [.1]])
+pre_y = np.array([[.1], [.3], [.3], [.1], [.2], [.1], [.2], [.1], [.1]])
 
 alpha = 0.1
 input_dim = 1
@@ -134,7 +134,7 @@ for j in range(10000):
         layer_2_deltas.append(layer_2_error * sigmoid_output_to_derivative(layer_2))
         overallError += np.abs(layer_2_error[0])
 
-        d[binary_dim - position - 1] = round(layer_2[0][0], 1)
+        d[binary_dim - position - 1] = round(layer_2[0][0], 2)
         #d[binary_dim - position - 1] = layer_2[0][0]
 
         layer_1_values.append(copy.deepcopy(layer_1))
@@ -188,7 +188,6 @@ overallError = 0
 layer_2_deltas = list()
 layer_1_values = list()
 layer_1_values.append(np.zeros(hidden_dim))
-print("------>", sample[0])
 print("------>", sample[0][0])
 print("------>", sample[0][1])
 print("------>", sample[0][2])
@@ -201,9 +200,9 @@ print("------>", sample[0][8])
 
 for position in range(binary_dim):
 
-        X = np.array([sample[0][binary_dim - position + 1]])
+        X = np.array([sample[0][binary_dim - position]])
         #print(position, ".")
-        y = np.array([sample[0][binary_dim - position - 1 + 1]]).T
+        y = np.array([sample[0][binary_dim - position - 1]]).T
 
         layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
 
@@ -218,7 +217,7 @@ for position in range(binary_dim):
 
         layer_1_values.append(copy.deepcopy(layer_1))
 
-        if j > 9990:
+        if 1==1:
             print("f(", X, ",[", position, "])=", y)
             print("Error:" + str(overallError))
             print("__Pre:" + str(X))
