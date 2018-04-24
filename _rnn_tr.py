@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-np.random.seed(46689997)
+np.random.seed(466899297)
 
 int2binary = {}
 binary_dim = 3
@@ -34,10 +34,19 @@ def random_sample_generator():
         one_sub_sample = list()
     return sample_set
 
+def base_sample_generator():
+    sample_set = list()
+    for i in range(0,3):
+        for j in range(0,3):
+            for k in range(0,3):
+                for l in range(0,3):
+                    sample_set.append()
+        
 
 sample = random_sample_generator()
-for i in range(len(sample)):
-    print(str(i), " ", sample[i])
+
+#for i in range(len(sample)):
+#    print(str(i), " ", sample[i])
 
 
 def transcript_to_coordinates():
@@ -64,8 +73,8 @@ def transcript_to_coordinates():
 
 my_sample = transcript_to_coordinates()
 
-for i in range(len(my_sample)):
-    print(my_sample[i])
+# for i in range(len(my_sample)):
+#    print(my_sample[i])
 
 
 def cre_sample_for_graph(my_sample):
@@ -98,11 +107,11 @@ time.sleep(1)
 largest_number = pow(2, binary_dim)
 
 # pre_X = np.array([[1, 0, 1], [1, 0, 1], [1, 1, 0], [1, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1], [0, 1, 1], [1, 0, 1]])
-pre_y = np.array([[.1], [.1], [.2],[.1]])
+pre_y = np.array([[.1], [.1], [.2], [.1]])
 
 alpha = 0.1
 input_dim = 1
-hidden_dim = 3
+hidden_dim = 1
 output_dim = 1
 
 synapse_0 = 2 * np.random.random((input_dim, hidden_dim)) - 1
@@ -182,6 +191,7 @@ print("")
 print("synapse_h:", synapse_h)
 print("")
 print("sample[0]", sample[0])
+print("======================================")
 
 d = np.zeros_like(pre_y)
 # pre_y = sample[0]
