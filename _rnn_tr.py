@@ -2,6 +2,8 @@ import copy
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import itertools
+from itertools import product
 
 np.random.seed(466899297)
 
@@ -34,18 +36,26 @@ def random_sample_generator():
         one_sub_sample = list()
     return sample_set
 
-def base_sample_generator():
-    sample_set = list()
-    for i in range(0,3):
-        for j in range(0,3):
-            for k in range(0,3):
-                for l in range(0,3):
-                    sample_set.append()
-        
+
+def variations_generator(x):
+    sample = list()
+    for i in product(x, repeat=len(x)+1):
+        sample.append(i)
+
+    return sample
+
+
+basic_set = [[.1], [.2], [.3]]
+
+basic_sample = variations_generator(basic_set)
+
+for i in range(0, 80):
+    print basic_sample[i]
 
 sample = random_sample_generator()
 
-#for i in range(len(sample)):
+
+# for i in range(len(sample)):
 #    print(str(i), " ", sample[i])
 
 
@@ -72,6 +82,7 @@ def transcript_to_coordinates():
 
 
 my_sample = transcript_to_coordinates()
+
 
 # for i in range(len(my_sample)):
 #    print(my_sample[i])
@@ -199,17 +210,17 @@ overallError = 0
 layer_2_deltas = list()
 layer_1_values = list()
 layer_1_values.append(np.zeros(hidden_dim))
-print("------>", sample[0][0])
-print("------>", sample[0][1])
-print("------>", sample[0][2])
-print("------>", sample[0][3])
 
+print("------>", basic_sample[0][0])
+print("------>", basic_sample[0][1])
+print("------>", basic_sample[0][2])
+print("------>", basic_sample[0][3])
 
 for position in range(binary_dim):
 
-    X = np.array([sample[0][binary_dim - position]])
+    X = np.array([basic_sample[0][binary_dim - position]])
     # print(position, ".")
-    y = np.array([sample[0][binary_dim - position - 1]]).T
+    y = np.array([basic_sample[0][binary_dim - position - 1]]).T
 
     layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
 
