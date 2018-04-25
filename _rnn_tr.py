@@ -50,7 +50,7 @@ basic_set = [[.1], [.2], [.3]]
 basic_sample = variations_generator(basic_set)
 
 for i in range(0, 80):
-    print basic_sample[i]
+    print(basic_sample[i])
 
 sample = random_sample_generator()
 
@@ -118,11 +118,11 @@ time.sleep(1)
 largest_number = pow(2, binary_dim)
 
 # pre_X = np.array([[1, 0, 1], [1, 0, 1], [1, 1, 0], [1, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1], [0, 1, 1], [1, 0, 1]])
-pre_y = np.array([[.1], [.1], [.2], [.1]])
+pre_y = np.array([[.1], [.1], [.3], [.1]])
 
 alpha = 0.1
 input_dim = 1
-hidden_dim = 1
+hidden_dim = 2
 output_dim = 1
 
 synapse_0 = 2 * np.random.random((input_dim, hidden_dim)) - 1
@@ -155,7 +155,7 @@ for j in range(10000):
         layer_2_deltas.append(layer_2_error * sigmoid_output_to_derivative(layer_2))
         overallError += np.abs(layer_2_error[0])
 
-        d[binary_dim - position - 1] = round(layer_2[0][0], 2)
+        d[binary_dim - position - 1] = round(layer_2[0][0], 1)
         # d[binary_dim - position - 1] = layer_2[0][0]
 
         layer_1_values.append(copy.deepcopy(layer_1))
@@ -204,43 +204,56 @@ print("")
 print("sample[0]", sample[0])
 print("======================================")
 
-d = np.zeros_like(pre_y)
-# pre_y = sample[0]
-overallError = 0
-layer_2_deltas = list()
-layer_1_values = list()
-layer_1_values.append(np.zeros(hidden_dim))
+sample_output = list()
 
-print("------>", basic_sample[0][0])
-print("------>", basic_sample[0][1])
-print("------>", basic_sample[0][2])
-print("------>", basic_sample[0][3])
+for i in range(0, 80):
+    d = np.zeros_like(pre_y)
+    pre_y = basic_sample[0]
+    overallError = 0
+    layer_2_deltas = list()
+    layer_1_values = list()
+    layer_1_values.append(np.zeros(hidden_dim))
 
-for position in range(binary_dim):
+    print("-----------/submitting this/------------")
+    print("------>", basic_sample[i][0])
+    print("------>", basic_sample[i][1])
+    print("------>", basic_sample[i][2])
+    print("------>", basic_sample[i][3])
+    print("----------------------------------------")
+    output_sample_one = list()
 
-    X = np.array([basic_sample[0][binary_dim - position]])
-    # print(position, ".")
-    y = np.array([basic_sample[0][binary_dim - position - 1]]).T
+    for position in range(binary_dim):
 
-    layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
+        X = np.array([basic_sample[i][binary_dim - position]])
+        # print(position, ".")
+        y = np.array([basic_sample[i][binary_dim - position - 1]]).T
 
-    layer_2 = sigmoid(np.dot(layer_1, synapse_1))
+        layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
 
-    layer_2_error = y - layer_2
-    layer_2_deltas.append(layer_2_error * sigmoid_output_to_derivative(layer_2))
-    overallError += np.abs(layer_2_error[0])
+        layer_2 = sigmoid(np.dot(layer_1, synapse_1))
 
-    d[binary_dim - position - 1] = round(layer_2[0][0], 1)
-    # d[binary_dim - position - 1] = layer_2[0][0]
+        layer_2_error = y - layer_2
+        layer_2_deltas.append(layer_2_error * sigmoid_output_to_derivative(layer_2))
+        overallError += np.abs(layer_2_error[0])
 
-    layer_1_values.append(copy.deepcopy(layer_1))
+        d[binary_dim - position - 1] = round(layer_2[0][0], 1)
+        output_sample_one.append(d[binary_dim - position - 1])
+        # d[binary_dim - position - 1] = layer_2[0][0]
 
-    if 1 == 1:
-        print("f(", X, ",[", position, "])=", y)
-        print("Error:" + str(overallError))
-        print("__Pre:" + str(X))
-        print("Guess:" + str(d[binary_dim - position - 1]))
-        print("_True:" + str(y))
-        print("--------------------")
+        layer_1_values.append(copy.deepcopy(layer_1))
 
-    future_layer_1_delta = np.zeros(hidden_dim)
+        if 1 == 1:
+            print("f(", X, ",[", position, "])=", y)
+            print("Error:" + str(overallError))
+            print("__Pre:" + str(X))
+            print("Guess:" + str(d[binary_dim - position - 1]))
+            print("_True:" + str(y))
+
+            print("--------------------")
+
+        future_layer_1_delta = np.zeros(hidden_dim)
+    print("loooo:", output_sample_one)
+    sample_output.append(output_sample_one)
+
+for i in range(0, len(sample_output)):
+    print(sample_output[i])
