@@ -45,7 +45,7 @@ def variations_generator(x):
     return sample
 
 
-basic_set = [[.0], [.1], [.9]]
+basic_set = [[.0], [.1], [.7]]
 
 basic_sample = variations_generator(basic_set)
 
@@ -117,11 +117,11 @@ time.sleep(1)
 
 largest_number = pow(2, binary_dim)
 
-pre_y = np.array([[.1], [.0], [.9], [.9]])
+pre_y = np.array([[.1], [.1], [.7], [.7]])
 
 alpha = 0.1
 input_dim = 1
-hidden_dim = 21
+hidden_dim = 2
 output_dim = 1
 
 synapse_0 = 2 * np.random.random((input_dim, hidden_dim)) - 1
@@ -256,3 +256,9 @@ for i in range(0, 80):
 
 for i in range(0, len(sample_output)):
     print(sample_output[i])
+
+print("----------------------")
+print("----------------------")
+
+s1 = set(sample_output)
+print(s1)
