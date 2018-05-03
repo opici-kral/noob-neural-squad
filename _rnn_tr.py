@@ -199,8 +199,6 @@ print("")
 print("synapse_1:", synapse_1)
 print("")
 print("synapse_h:", synapse_h)
-print("")
-print("sample[0]", sample[0])
 print("======================================")
 
 sample_output = list()
@@ -251,14 +249,15 @@ for i in range(0, 80):
             print("--------------------")
 
         future_layer_1_delta = np.zeros(hidden_dim)
-    print("loooo:", output_sample_one)
+
+    print("single-output:", output_sample_one)
     sample_output.append(output_sample_one)
 
 for i in range(0, len(sample_output)):
-    print(sample_output[i])
+    print(str(i) + ". " +  str(sample_output[i]))
 
 print("----------------------")
 print("----------------------")
 
-s1 = set(sample_output)
+s1 = list(set(sample_output))
 print(s1)
