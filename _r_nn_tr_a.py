@@ -2,11 +2,13 @@ import copy
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import itertools
+from itertools import product
 
-np.random.seed(46689997)
+np.random.seed(466899297)
 
 int2binary = {}
-binary_dim = 8
+binary_dim = 2
 
 
 def sigmoid(x):
@@ -19,89 +21,107 @@ def sigmoid_output_to_derivative(output):
 
 
 # generate random vector-path set
-def random_sample_generator():
-    sample_set = list()
-    one_sub_sample = list()
-    for j in range(0, 1001):
-        for i in range(0, binary_dim + 1):
-            if np.random.random(1) < .333:
-                one_sub_sample.append([.1])
-            elif .333 <= np.random.random(1) <= .666:
-                one_sub_sample.append([.2])
-            else:
-                one_sub_sample.append([.3])
-        sample_set.append(one_sub_sample)
-        one_sub_sample = list()
-    return sample_set
+#def random_sample_generator():
+#    sample_set = list()
+#    one_sub_sample = list()
+#    for j in range(0, 1001):
+#        for i in range(0, binary_dim + 1):
+#            if np.random.random(1) < .333:
+#                one_sub_sample.append([.1])
+#            elif .333 <= np.random.random(1) <= .666:
+#                one_sub_sample.append([.2])
+#            else:
+#                one_sub_sample.append([.3])
+#        sample_set.append(one_sub_sample)
+#        one_sub_sample = list()
+#    return sample_set
 
 
-sample = random_sample_generator()
-for i in range(len(sample)):
-    print(str(i), " ", sample[i])
+def variations_generator(x):
+    sample = list()
+    for i in product(x, repeat=len(x)+1):
+        sample.append(i)
+
+    return sample
 
 
-def transcript_to_coordinates():
-    #text_file = open("my_maze.txt", "w+")
-    sample_set = list()
-    for j in range(len(sample)):
-        x = 0
-        y = 0
-        path = list()
-        for i in range(len(sample[j])):
-            if sample[j][i][0] == .1:
-                y += 1
-            elif sample[j][i][0] == .2:
-                x += 1
-            else:
-                x += -1
-            path.append([x, y])
-        sample_set.append(path)
-        #print(path)
-        #text_file.write("%s\n" % path)
-    #text_file.close()
-    return sample_set
+basic_set = [[.0], [.1]]
 
-my_sample = transcript_to_coordinates()
+basic_sample = variations_generator(basic_set)
 
-for i in range(len(my_sample)):
-    print(my_sample[i])
+for i in range(0, len(basic_sample)):
+    print(basic_sample[i])
+
+#sample = random_sample_generator()
 
 
-def cre_sample_for_graph(my_sample):
-    sampler = list()
-    for j in range(len(my_sample)):
-        x1 = list()
-        y1 = list()
-        for i in range(len(my_sample[j])):
-            x1.append(my_sample[j][i][0])
-            y1.append(my_sample[j][i][1])
-        sampler.append([x1, y1])
-    return sampler
+# for i in range(len(sample)):
+#    print(str(i), " ", sample[i])
 
 
-path_set = cre_sample_for_graph(my_sample)
+#def transcript_to_coordinates():
+#    # text_file = open("my_maze.txt", "w+")
+#    sample_set = list()
+#    for j in range(len(sample)):
+#        x = 0
+#        y = 0
+#        path = list()
+#        for i in range(len(sample[j])):
+#            if sample[j][i][0] == .1:
+#                y += 1
+#            elif sample[j][i][0] == .2:
+#                x += 1
+#            else:
+#                x += -1
+#            path.append([x, y])
+#        sample_set.append(path)
+        # print(path)
+        # text_file.write("%s\n" % path)
+    # text_file.close()
+ #   return sample_set
+
+
+#my_sample = transcript_to_coordinates()
+
+
+# for i in range(len(my_sample)):
+#    print(my_sample[i])
+
+
+#def cre_sample_for_graph(my_sample):
+#    sampler = list()
+#    for j in range(len(my_sample)):
+#        x1 = list()
+#        y1 = list()
+#        for i in range(len(my_sample[j])):
+#            x1.append(my_sample[j][i][0])
+#            y1.append(my_sample[j][i][1])
+#        sampler.append([x1, y1])
+#    return sampler
+
+
+#path_set = cre_sample_for_graph(my_sample)
 
 print("")
-#print(path_set)
+# print(path_set)
 
-for i in range(len(path_set)):
-    plt.scatter(path_set[i][0], path_set[i][1])
-    plt.plot(path_set[i][0], path_set[i][1])
-    
-#plt.ylabel('Y')
-#plt.xlabel('x')
-plt.show()
+#for i in range(len(path_set)):
+#    plt.scatter(path_set[i][0], path_set[i][1])
+#    plt.plot(path_set[i][0], path_set[i][1])
+
+# plt.ylabel('Y')
+# plt.xlabel('x')
+#plt.show()
 
 time.sleep(1)
 
 largest_number = pow(2, binary_dim)
 
-#pre_X = np.array([[1, 0, 1], [1, 0, 1], [1, 1, 0], [1, 0, 1], [1, 1, 0], [1, 0, 1], [0, 1, 1], [0, 1, 1], [1, 0, 1]])
-pre_y = np.array([[.1], [.3], [.3], [.1], [.2], [.1], [.2], [.1], [.1]])
+pre_y = np.array([[.0], [.1], [.1]])
 
 alpha = 0.1
 input_dim = 1
-hidden_dim = 7
+hidden_dim = 2
 output_dim = 1
 
 synapse_0 = 2 * np.random.random((input_dim, hidden_dim)) - 1
@@ -124,7 +144,7 @@ for j in range(10000):
     for position in range(binary_dim):
 
         X = np.array([pre_y[binary_dim - position]])
-        y = np.array([pre_y[binary_dim - position-1]]).T
+        y = np.array([pre_y[binary_dim - position - 1]]).T
 
         layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
 
@@ -134,13 +154,13 @@ for j in range(10000):
         layer_2_deltas.append(layer_2_error * sigmoid_output_to_derivative(layer_2))
         overallError += np.abs(layer_2_error[0])
 
-        d[binary_dim - position - 1] = round(layer_2[0][0], 2)
-        #d[binary_dim - position - 1] = layer_2[0][0]
+        d[binary_dim - position - 1] = round(layer_2[0][0], 1)
+        # d[binary_dim - position - 1] = layer_2[0][0]
 
         layer_1_values.append(copy.deepcopy(layer_1))
 
         if j > 9990:
-            print("f(", X, ",[", position, "])=",y)
+            print("f(", X, ",[", position, "])=", y)
             print("Error:" + str(overallError))
             print("__Pre:" + str(X))
             print("Guess:" + str(d[binary_dim - position - 1]))
@@ -179,30 +199,31 @@ print("")
 print("synapse_1:", synapse_1)
 print("")
 print("synapse_h:", synapse_h)
-print("")
-print("sample[0]", sample[0])
+print("======================================")
 
-d = np.zeros_like(pre_y)
-#pre_y = sample[0]
-overallError = 0
-layer_2_deltas = list()
-layer_1_values = list()
-layer_1_values.append(np.zeros(hidden_dim))
-print("------>", sample[0][0])
-print("------>", sample[0][1])
-print("------>", sample[0][2])
-print("------>", sample[0][3])
-print("------>", sample[0][4])
-print("------>", sample[0][5])
-print("------>", sample[0][6])
-print("------>", sample[0][7])
-print("------>", sample[0][8])
+sample_output = list()
 
-for position in range(binary_dim):
+for i in range(0, 80):
+    d = np.zeros_like(pre_y)
+    pre_y = basic_sample[0]
+    overallError = 0
+    layer_2_deltas = list()
+    layer_1_values = list()
+    layer_1_values.append(np.zeros(hidden_dim))
 
-        X = np.array([sample[0][binary_dim - position]])
-        #print(position, ".")
-        y = np.array([sample[0][binary_dim - position - 1]]).T
+    print("-----------/submitting this/------------")
+    print("------>", basic_sample[i][0])
+    print("------>", basic_sample[i][1])
+    print("------>", basic_sample[i][2])
+    print("------>", basic_sample[i][3])
+    print("----------------------------------------")
+    output_sample_one = list()
+
+    for position in range(binary_dim):
+
+        X = np.array([basic_sample[i][binary_dim - position]])
+        # print(position, ".")
+        y = np.array([basic_sample[i][binary_dim - position - 1]]).T
 
         layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
 
@@ -213,16 +234,36 @@ for position in range(binary_dim):
         overallError += np.abs(layer_2_error[0])
 
         d[binary_dim - position - 1] = round(layer_2[0][0], 1)
-        #d[binary_dim - position - 1] = layer_2[0][0]
+        output_sample_one.append(d[binary_dim - position - 1])
+        # d[binary_dim - position - 1] = layer_2[0][0]
 
         layer_1_values.append(copy.deepcopy(layer_1))
 
-        if 1==1:
+        if 1 == 1:
             print("f(", X, ",[", position, "])=", y)
             print("Error:" + str(overallError))
             print("__Pre:" + str(X))
             print("Guess:" + str(d[binary_dim - position - 1]))
             print("_True:" + str(y))
+
             print("--------------------")
 
         future_layer_1_delta = np.zeros(hidden_dim)
+
+    print("single-output:", output_sample_one)
+    sample_output.append(output_sample_one)
+
+for i in range(0, len(sample_output)):
+    print(str(i) + ". " +  str(sample_output[i]))
+
+print("----------------------")
+print("----------------------")
+
+sample_output_new = []
+
+for i in sample_output:
+    if i not in sample_output_new:
+        sample_output_new.append(i)
+
+for i in range(0, len(sample_output_new)):
+    print(str(i) + ". " +  str(sample_output_new[i]))
