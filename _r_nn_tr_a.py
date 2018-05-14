@@ -1,8 +1,8 @@
 import copy
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import time
-import itertools
+#import itertools
 from itertools import product
 
 np.random.seed(466899297)
@@ -45,7 +45,7 @@ def variations_generator(x):
     return sample
 
 
-basic_set = [[.0], [.1]]
+basic_set = [[0.2], [0.6]]
 
 basic_sample = variations_generator(basic_set)
 
@@ -117,7 +117,7 @@ time.sleep(1)
 
 largest_number = pow(2, binary_dim)
 
-pre_y = np.array([[.0], [.1], [.1]])
+pre_y = np.array([[0.2], [0.6], [0.2]])
 
 alpha = 0.1
 input_dim = 1
@@ -160,11 +160,9 @@ for j in range(10000):
         layer_1_values.append(copy.deepcopy(layer_1))
 
         if j > 9990:
-            print("f(", X, ",[", position, "])=", y)
+            print("f(", X, ")=", y)
             print("Error:" + str(overallError))
-            print("__Pre:" + str(X))
             print("Guess:" + str(d[binary_dim - position - 1]))
-            print("_True:" + str(y))
             print("--------------------")
 
     future_layer_1_delta = np.zeros(hidden_dim)
@@ -203,7 +201,7 @@ print("======================================")
 
 sample_output = list()
 
-for i in range(0, 80):
+for i in range(0, 8):
     d = np.zeros_like(pre_y)
     pre_y = basic_sample[0]
     overallError = 0
@@ -215,7 +213,7 @@ for i in range(0, 80):
     print("------>", basic_sample[i][0])
     print("------>", basic_sample[i][1])
     print("------>", basic_sample[i][2])
-    print("------>", basic_sample[i][3])
+    #   print("------>", basic_sample[i][3])
     print("----------------------------------------")
     output_sample_one = list()
 
@@ -240,21 +238,18 @@ for i in range(0, 80):
         layer_1_values.append(copy.deepcopy(layer_1))
 
         if 1 == 1:
-            print("f(", X, ",[", position, "])=", y)
+            print("f(", X, ")=", y)
             print("Error:" + str(overallError))
-            print("__Pre:" + str(X))
             print("Guess:" + str(d[binary_dim - position - 1]))
-            print("_True:" + str(y))
-
             print("--------------------")
 
         future_layer_1_delta = np.zeros(hidden_dim)
 
-    print("single-output:", output_sample_one)
+    print(basic_sample[i],"--->", output_sample_one)
     sample_output.append(output_sample_one)
 
 for i in range(0, len(sample_output)):
-    print(str(i) + ". " +  str(sample_output[i]))
+    print(str(i) + ". " + str(sample_output[i]))
 
 print("----------------------")
 print("----------------------")
@@ -266,4 +261,4 @@ for i in sample_output:
         sample_output_new.append(i)
 
 for i in range(0, len(sample_output_new)):
-    print(str(i) + ". " +  str(sample_output_new[i]))
+    print(str(i) + ". " + str(sample_output_new[i]))
