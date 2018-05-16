@@ -5,7 +5,7 @@ import time
 #import itertools
 from itertools import product
 
-np.random.seed(466899297)
+np.random.seed(466298897)
 
 int2binary = {}
 binary_dim = 2
@@ -146,7 +146,7 @@ for j in range(10000):
         X = np.array([pre_y[binary_dim - position]])
         y = np.array([pre_y[binary_dim - position - 1]]).T
 
-        layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
+        layer_1 = np.round(sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h)),1)
 
         layer_2 = sigmoid(np.dot(layer_1, synapse_1))
 
@@ -209,12 +209,12 @@ for i in range(0, 8):
     layer_1_values = list()
     layer_1_values.append(np.zeros(hidden_dim))
 
-    print("-----------/submitting this/------------")
-    print("------>", basic_sample[i][0])
-    print("------>", basic_sample[i][1])
-    print("------>", basic_sample[i][2])
+    #print("-----------/submitting this/------------")
+    #print("------>", basic_sample[i][0])
+    #print("------>", basic_sample[i][1])
+    #print("------>", basic_sample[i][2])
     #   print("------>", basic_sample[i][3])
-    print("----------------------------------------")
+    #print("----------------------------------------")
     output_sample_one = list()
 
     for position in range(binary_dim):
@@ -223,7 +223,9 @@ for i in range(0, 8):
         # print(position, ".")
         y = np.array([basic_sample[i][binary_dim - position - 1]]).T
 
-        layer_1 = sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h))
+        layer_1 = np.round(sigmoid(np.dot(X, synapse_0) + np.dot(layer_1_values[-1], synapse_h)),1)
+
+        print("{",position, "}", layer_1)
 
         layer_2 = sigmoid(np.dot(layer_1, synapse_1))
 
@@ -237,15 +239,16 @@ for i in range(0, 8):
 
         layer_1_values.append(copy.deepcopy(layer_1))
 
-        if 1 == 1:
-            print("f(", X, ")=", y)
-            print("Error:" + str(overallError))
-            print("Guess:" + str(d[binary_dim - position - 1]))
-            print("--------------------")
+       # if 1 == 1:
+         #   print("f(", X, ")=", y)
+         #   print("Error:" + str(overallError))
+         #   print("Guess:" + str(d[binary_dim - position - 1]))
+         #   print("--------------------")
 
         future_layer_1_delta = np.zeros(hidden_dim)
 
     print(basic_sample[i],"--->", output_sample_one)
+    print("")
     sample_output.append(output_sample_one)
 
 for i in range(0, len(sample_output)):
