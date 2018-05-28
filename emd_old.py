@@ -35,12 +35,9 @@ def variations_generator(x, x_len):
 
 def and_gate(list):
     result = []
-    for i in (0, len(list)-1):
+    for i in range(0, len(list)):
         a = list[i][0]
         b = list[i][1]
-        print(list[i])
-        print("a:",a)
-        print("b:",b)
         if a == 1 and b == 1:
             result.append(1)
         else:
@@ -49,22 +46,31 @@ def and_gate(list):
     return result
 
 
-def or_gate(a, b):
+def or_gate(list):
     result = []
-    if a == 0 and b == 0:
-        result.append(0)
-    else:
-        result.append(1)
+    for i in range(0, len(list)):
+        a = list[i][0]
+        b = list[i][1]
+        if a == 0 and b == 0:
+            result.append(0)
+        else:
+            result.append(1)
+
     return result
 
 
-def xor_gate(a, b):
+def xor_gate(list):
     result = []
-    if (a == 1 and b == 1) or (a == 0 and b == 0):
-        result.append(0)
-    else:
-        result.append(1)
+    for i in range(0, len(list)):
+        a = list[i][0]
+        b = list[i][1]
+        if (a == 1 and b == 1) or (a == 0 and b == 0):
+            result.append(0)
+        else:
+            result.append(1)
+
     return result
+
 
 bin_set = [0, 1]
 
@@ -74,6 +80,9 @@ my_2_space = variations_generator(bin_set, 2)
 dist_emd = emd(p, q)
 dist_dkl = kullback_leibner(p, q)
 
+and_g = and_gate(my_2_space)
+or_g = or_gate(my_2_space)
+xor_g = xor_gate(my_2_space)
 
 print("")
 print("EMD(p,q) = ", dist_emd)
@@ -84,4 +93,29 @@ print(my_3_space)
 print("")
 print(my_2_space)
 print("")
-print(and_gate(my_2_space))
+print("AND: ", and_g)
+print("")
+print("OR: ", or_g)
+print("")
+print("XOR: ", xor_g)
+print("")
+
+pA0 = or_g.count(0)/len(or_g)
+pA1 = or_g.count(1)/len(or_g)
+pB0 = and_g.count(0)/len(and_g)
+pB1 = and_g.count(1)/len(and_g)
+pC0 = xor_g.count(0)/len(xor_g)
+pC1 = xor_g.count(1)/len(xor_g)
+
+
+unc_fut = []
+unc_fut.append(pA0*pB0*pC0)
+unc_fut.append(pA1*pB0*pC0)
+unc_fut.append(pA0*pB1*pC0)
+unc_fut.append(pA1*pB1*pC0)
+unc_fut.append(pA0*pB0*pC1)
+unc_fut.append(pA1*pB0*pC1)
+unc_fut.append(pA0*pB1*pC1)
+unc_fut.append(pA1*pB1*pC1)
+
+print(unc_fut)
