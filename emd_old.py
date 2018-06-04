@@ -1,5 +1,5 @@
 import numpy as np
-# import matplotlib.pyplot as pl
+import matplotlib.pyplot as pl
 from itertools import product
 
 q = [.125, .125, .125, .125, .125, .125, .125, .125]
@@ -90,12 +90,12 @@ and_g2 = and_gate(my_1_space)
 or_g2 = or_g
 xor_g2 = xor_gate(my_1_space)
 
-pA0 = or_g.count(0)/len(or_g)
-pA1 = or_g.count(1)/len(or_g)
-pB0 = and_g.count(0)/len(and_g)
-pB1 = and_g.count(1)/len(and_g)
-pC0 = xor_g.count(0)/len(xor_g)
-pC1 = xor_g.count(1)/len(xor_g)
+pA0 = float(or_g.count(0))/float(len(or_g))
+pA1 = float(or_g.count(1))/float(len(or_g))
+pB0 = float(and_g.count(0))/float(len(and_g))
+pB1 = float(and_g.count(1))/float(len(and_g))
+pC0 = float(xor_g.count(0))/float(len(xor_g))
+pC1 = float(xor_g.count(1))/float(len(xor_g))
 
 unc_fut = []
 unc_fut.append(pA0*pB0*pC0)
@@ -107,12 +107,12 @@ unc_fut.append(pA1*pB0*pC1)
 unc_fut.append(pA0*pB1*pC1)
 unc_fut.append(pA1*pB1*pC1)
 
-pA0 = or_g2.count(0)/len(or_g2)
-pA1 = or_g2.count(1)/len(or_g2)
-pB0 = and_g2.count(0)/len(and_g2)
-pB1 = and_g2.count(1)/len(and_g2)
-pC0 = xor_g2.count(0)/len(xor_g2)
-pC1 = xor_g2.count(1)/len(xor_g2)
+pA0 = float(or_g2.count(0))/float(len(or_g2))
+pA1 = float(or_g2.count(1))/float(len(or_g2))
+pB0 = float(and_g2.count(0))/float(len(and_g2))
+pB1 = float(and_g2.count(1))/float(len(and_g2))
+pC0 = float(xor_g2.count(0))/float(len(xor_g2))
+pC1 = float(xor_g2.count(1))/float(len(xor_g2))
 
 con_fut = []
 
@@ -128,6 +128,11 @@ con_fut.append(pA1*pB1*pC1)
 print(unc_fut)
 print("")
 print(con_fut)
+
+#t = pl.plot(unc_fut)
+#pl.show(unc_fut)
+#q = pl.hist(unc_fut, bins=5)
+#pl.show(q)
 
 dist_emd2 = emd(unc_fut, con_fut)
 dist_dkl2 = kullback_leibner(unc_fut, con_fut)
@@ -158,4 +163,37 @@ print("")
 print("OR2: ", or_g2)
 print("")
 print("XOR2: ", xor_g2)
+print("")
+
+
+p1 = [0., 0., 0., .5, .5, 0., 0., 0.]
+q1 = [.25, 0., 0., .25, .25, 0., 0., .25]
+q2 = [.16666667, .16666667, .16666667, .16666667, .16666667, 0., .16666667, 0.]
+q3 = [0., 0., .16666667, .16666667, .16666667, .16666667, .16666667, .16666667]
+q4 = [.125, .125, .125, .125, .125, .125, .125, .125]
+
+dist_emd3 = emd(p1, q1)
+dist_dkl3 = kullback_leibner(p1, q1)
+dist_emd4 = emd(p1, q2)
+dist_dkl4 = kullback_leibner(p1, q2)
+dist_emd5 = emd(p1, q3)
+dist_dkl5 = kullback_leibner(p1, q3)
+dist_emd6 = emd(p1, q4)
+dist_dkl6 = kullback_leibner(p1, q4)
+
+print("EMD3=",dist_emd3)
+print("")
+print("KL3=",dist_dkl3)
+print("")
+print("EMD4=",dist_emd4)
+print("")
+print("KL4=",dist_dkl4)
+print("")
+print("EMD5=",dist_emd5)
+print("")
+print("KL5=",dist_dkl5)
+print("")
+print("EMD6=",dist_emd6)
+print("")
+print("KL6=",dist_dkl6)
 print("")
