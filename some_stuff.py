@@ -6,7 +6,7 @@ import numpy as np
 import time
 
 # data I/O
-data = open('C:/Users/osenkyr/input.txt', 'r').read() # should be simple plain text file
+data = open('/home/jupiter/Documents/input.txt', 'r').read() # should be simple plain text file
 
 # my playground ###########################
 
@@ -35,19 +35,23 @@ hs[333] = np.copy(hprev)
 p = 0
 seq_length = 25
 inputs = [char_to_ix[ch] for ch in data[p:p+seq_length]]
-targets = [char_to_ix[ch] for ch in data[p+1:p+seq_length+1]]
+targets = [char_to_ix[ch] for ch in data[p+1:p+seq_length+1]]70
+
+print('data has %d characters, %d unique.' % (data_size, vocab_size))
 print("char_to_ix")
 print(char_to_ix)
 print("inputs")
 print(inputs)
 print("targets")
 print(targets)
+
 xs, hs, ys, ps = {}, {}, {}, {}
 hs[-1] = np.copy(hprev)
 loss = 0
 
 for t in range(len(inputs)):
     print("t: " + str(t))
+    print("input[t]:" + str(inputs[t]))
 
     xs[t] = np.zeros((vocab_size,1)) # encode in 1-of-k representation
     print("xs["+str(t)+"]: \n"+ str(xs[t]))
@@ -55,13 +59,10 @@ for t in range(len(inputs)):
     xs[t][inputs[t]] = 1
     print("xs["+str(t)+"]: \n"+ str(xs[t]))
 
-    print("------------------------>")
-    print(xs[t])
-
     hs[t] = np.tanh(np.dot(Wxh, xs[t]) + np.dot(Whh, hs[t-1]) + bh) # hidden state
     print("hs["+str(t)+"]: \n"+ str(hs[t]))
 
-    ys[t] = np.dot(Why, hs[t]) + by # unnormalized log probabilities for next chars
+    ys[t] = np.dot(Why, hs[t]) + by# unnormalized log probabilities for next chars
     print("ys["+str(t)+"]: \n"+str(ys[t]))
 
     ps[t] = np.exp(ys[t]) / np.sum(np.exp(ys[t])) # probabilities for next chars
@@ -69,6 +70,9 @@ for t in range(len(inputs)):
 
     loss += -np.log(ps[t][targets[t],0]) # softmax (cross-entropy loss)
     print("loss: \n"+str(loss))
+    print("t3333: \n" + str(ps[t][69]) )
+
+    time.sleep(1000)
 
 """
 for t in range(len(inputs)):
@@ -114,7 +118,7 @@ def lossFun(inputs, targets, hprev):
   hs[-1] = np.copy(hprev)
   loss = 0
   # forward pass
-  for t in xrange(len(inputs)):
+  for t in range(len(inputs)):
     xs[t] = np.zeros((vocab_size,1)) # encode in 1-of-k representation
     xs[t][inputs[t]] = 1
     hs[t] = np.tanh(np.dot(Wxh, xs[t]) + np.dot(Whh, hs[t-1]) + bh) # hidden state
@@ -125,7 +129,7 @@ def lossFun(inputs, targets, hprev):
   dWxh, dWhh, dWhy = np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
   dbh, dby = np.zeros_like(bh), np.zeros_like(by)
   dhnext = np.zeros_like(hs[0])
-  for t in reversed(xrange(len(inputs))):
+  for t in reversed(range(len(inputs))):
     dy = np.copy(ps[t])
     dy[targets[t]] -= 1 # backprop into y. see http://cs231n.github.io/neural-networks-case-study/#grad if confused here
     dWhy += np.dot(dy, hs[t].T)
@@ -141,14 +145,14 @@ def lossFun(inputs, targets, hprev):
   return loss, dWxh, dWhh, dWhy, dbh, dby, hs[len(inputs)-1]
 
 def sample(h, seed_ix, n):
-  """ 
-  sample a sequence of integers from the model 
+  """
+  sample a sequence of integers from the model
   h is memory state, seed_ix is seed letter for first time step
   """
   x = np.zeros((vocab_size, 1))
   x[seed_ix] = 1
   ixes = []
-  for t in xrange(n):
+  for t in range(n):
     h = np.tanh(np.dot(Wxh, x) + np.dot(Whh, h) + bh)
     y = np.dot(Why, h) + by
     p = np.exp(y) / np.sum(np.exp(y))
@@ -164,7 +168,7 @@ mbh, mby = np.zeros_like(bh), np.zeros_like(by) # memory variables for Adagrad
 smooth_loss = -np.log(1.0/vocab_size)*seq_length # loss at iteration 0
 while True:
   # prepare inputs (we're sweeping from left to right in steps seq_length long)
-  if p+seq_length+1 >= len(data) or n == 0: 
+  if p+seq_length+1 >= len(data) or n == 0:
     hprev = np.zeros((hidden_size,1)) # reset RNN memory
     p = 0 # go from start of data
   inputs = [char_to_ix[ch] for ch in data[p:p+seq_length]]
@@ -180,13 +184,13 @@ while True:
   loss, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
   smooth_loss = smooth_loss * 0.999 + loss * 0.001
   if n % 100 == 0: print('iter %d, loss: %f' % (n, smooth_loss)) # print progress
-  
+
   # perform parameter update with Adagrad
-  for param, dparam, mem in zip([Wxh, Whh, Why, bh, by], 
-                                [dWxh, dWhh, dWhy, dbh, dby], 
+  for param, dparam, mem in zip([Wxh, Whh, Why, bh, by],
+                                [dWxh, dWhh, dWhy, dbh, dby],
                                 [mWxh, mWhh, mWhy, mbh, mby]):
     mem += dparam * dparam
     param += -learning_rate * dparam / np.sqrt(mem + 1e-8) # adagrad update
 
   p += seq_length # move data pointer
-  n += 1 # iteration counter 
+  n += 1 # iteration counter
