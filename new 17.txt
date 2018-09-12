@@ -1,3 +1,45 @@
+import json
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from io import BytesIO
+
+
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b'Hello, world!')
+
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        print("con_len:", content_length)
+        body = self.rfile.read(content_length)
+
+
+        #data_json = json.loads(body['json'][0])
+
+        #print("Sum of vals in json: ", sum(data_json.values()))
+
+        self.send_response(200)
+        self.end_headers()
+        response = BytesIO()
+        response.write(b'This is POST request. ')
+        response.write(b'Received: ')
+        response.write(body)
+        self.wfile.write(response.getvalue())
+        #json_str = '{"name": "Value"}'
+        print("I go and parse:", body)
+        #parsed_json = json.loads(body)
+        for i in range(0, 99):
+            print(body)
+            # print(parsed_jsonsed_json)
+
+
+httpd = HTTPServer(('localhost', 8000), SimpleHTTPRequestHandler)
+
+httpd.serve_forever()
+
+----------------------
 "C:\Program Files (x86)\Python34\python.exe" H:/oldrich_tmp/upcch/vbc_eve/current_tmp.py
 ([0.2], [0.2], [0.2])
 ([0.2], [0.2], [0.6])
